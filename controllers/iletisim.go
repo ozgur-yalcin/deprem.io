@@ -8,10 +8,10 @@ import (
 )
 
 func Iletisim(w http.ResponseWriter, r *http.Request) {
-	skip, _ := strconv.ParseInt(r.Form.Get("skip"), 10, 64)
+	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
-	if skip < 0 {
-		skip = 0
+	if page < 0 {
+		page = 0
 	}
 	if limit <= 10 {
 		limit = 10
@@ -24,7 +24,7 @@ func Iletisim(w http.ResponseWriter, r *http.Request) {
 		AdSoyad: r.Form.Get("adSoyad"),
 		Email:   r.Form.Get("email"),
 		Mesaj:   r.Form.Get("mesaj"),
-	}, skip, limit)
+	}, (page-1)*limit, limit)
 	if len(search) > 0 {
 		response := models.Response{Error: "Bu iletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
@@ -50,5 +50,4 @@ func Iletisim(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Write(response.JSON())
-	w.Write([]byte(""))
 }
