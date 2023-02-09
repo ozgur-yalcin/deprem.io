@@ -45,7 +45,6 @@ func Yardimet(w http.ResponseWriter, r *http.Request) {
 		HedefSehir:   r.Form.Get("hedefSehir"),
 		YardimDurumu: r.Form.Get("yardimDurumu"),
 		Aciklama:     r.Form.Get("aciklama"),
-		Fields:       r.Form.Get("fields"),
 		IPv4:         r.Header.Get("X-Forwarded-For"),
 		CreatedAt:    time.Now(),
 	})

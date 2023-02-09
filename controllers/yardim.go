@@ -44,7 +44,6 @@ func Yardim(w http.ResponseWriter, r *http.Request) {
 		FizikiDurum:   r.Form.Get("fizikiDurum"),
 		TweetLink:     r.Form.Get("tweetLink"),
 		GoogleMapLink: r.Form.Get("googleMapLink"),
-		Fields:        r.Form.Get("fields"),
 		IPv4:          r.Header.Get("X-Forwarded-For"),
 	})
 	if id != "" {

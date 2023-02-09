@@ -10,7 +10,7 @@ import (
 
 // Sunucu bilgileri
 const (
-	httpHost = "localhost"
+	httpHost = "0.0.0.0"
 	httpPort = ":http" // ssl için ":https" kullanılmalıdır
 )
 

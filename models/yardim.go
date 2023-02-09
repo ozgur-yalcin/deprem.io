@@ -30,7 +30,6 @@ type Yardim struct {
 	FizikiDurum     string    `json:"fizikiDurum,omitempty" bson:"fizikiDurum,omitempty"`
 	GoogleMapLink   string    `json:"googleMapLink,omitempty" bson:"googleMapLink,omitempty"`
 	TweetLink       string    `json:"tweetLink,omitempty" bson:"tweetLink,omitempty"`
-	Fields          any       `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
 	IPv4            string    `json:"ip,omitempty" bson:"ip,omitempty"`
 	CreatedAt       time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 	UpdatedAt       time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
