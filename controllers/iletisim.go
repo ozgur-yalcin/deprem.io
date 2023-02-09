@@ -67,6 +67,21 @@ func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	}
 	iletisim := new(models.Iletisim)
 	filter := bson.D{}
+	if r.Form.Get("adSoyad") != "" {
+		filter = append(filter, bson.E{"adSoyad", bson.D{{"$regex", r.Form.Get("adSoyad")}}})
+	}
+	if r.Form.Get("email") != "" {
+		filter = append(filter, bson.E{"email", bson.D{{"$regex", r.Form.Get("email")}}})
+	}
+	if r.Form.Get("telefon") != "" {
+		filter = append(filter, bson.E{"telefon", bson.D{{"$regex", r.Form.Get("telefon")}}})
+	}
+	if r.Form.Get("mesaj") != "" {
+		filter = append(filter, bson.E{"mesaj", bson.D{{"$regex", r.Form.Get("mesaj")}}})
+	}
+	if r.Form.Get("ip") != "" {
+		filter = append(filter, bson.E{"ip", bson.D{{"$regex", r.Form.Get("ip")}}})
+	}
 	search := iletisim.Ara(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")

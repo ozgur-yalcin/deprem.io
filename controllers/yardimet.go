@@ -87,14 +87,14 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 	if r.Form.Get("hedefSehir") != "" {
 		filter = append(filter, bson.E{"hedefSehir", r.Form.Get("hedefSehir")})
 	}
-	if r.Form.Get("yardimDurumu") != "" {
-		filter = append(filter, bson.E{"yardimDurumu", r.Form.Get("yardimDurumu")})
-	}
 	if r.Form.Get("aciklama") != "" {
 		filter = append(filter, bson.E{"aciklama", r.Form.Get("aciklama")})
 	}
-	if r.Form.Get("ipAdresi") != "" {
-		filter = append(filter, bson.E{"ipAdresi", r.Form.Get("ipAdresi")})
+	if r.Form.Get("yardimDurumu") != "" {
+		filter = append(filter, bson.E{"yardimDurumu", r.Form.Get("yardimDurumu")})
+	}
+	if r.Form.Get("ip") != "" {
+		filter = append(filter, bson.E{"ip", r.Form.Get("ip")})
 	}
 	search := yardimet.Ara(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
@@ -129,8 +129,8 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		xlsdata.AddCell().SetString(data.Telefon)
 		xlsdata.AddCell().SetString(data.Sehir)
 		xlsdata.AddCell().SetString(data.HedefSehir)
-		xlsdata.AddCell().SetString(data.YardimDurumu)
 		xlsdata.AddCell().SetString(data.Aciklama)
+		xlsdata.AddCell().SetString(data.YardimDurumu)
 		xlsdata.AddCell().SetString(data.IPv4)
 		xlsdata.AddCell().SetString(data.CreatedAt.Format(time.RFC3339))
 		xlsdata.AddCell().SetString(data.UpdatedAt.Format(time.RFC3339))
