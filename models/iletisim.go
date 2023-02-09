@@ -1,10 +1,13 @@
 package models
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
+	cache "github.com/ozgur-soft/deprem.io/cache"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -20,6 +23,14 @@ type Iletisim struct {
 }
 
 func (model *Iletisim) Ara(ctx context.Context, data Iletisim, skip int64, limit int64) (list []Iletisim) {
+	cachekey := fmt.Sprintf("%v_%v_%v", IletisimCollection, skip, limit)
+	if cache.Get(ctx, cachekey) != nil {
+		data := cache.Get(ctx, cachekey)
+		reader := bytes.NewReader(data)
+		decoder := json.NewDecoder(reader)
+		decoder.Decode(&list)
+		return list
+	}
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)

@@ -1,10 +1,13 @@
 package models
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
+	cache "github.com/ozgur-soft/deprem.io/cache"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -25,6 +28,14 @@ type Yardimet struct {
 }
 
 func (model *Yardimet) Ara(ctx context.Context, data Yardimet, skip int64, limit int64) (list []Yardimet) {
+	cachekey := fmt.Sprintf("%v_%v_%v", YardimetCollection, skip, limit)
+	if cache.Get(ctx, cachekey) != nil {
+		data := cache.Get(ctx, cachekey)
+		reader := bytes.NewReader(data)
+		decoder := json.NewDecoder(reader)
+		decoder.Decode(&list)
+		return list
+	}
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)

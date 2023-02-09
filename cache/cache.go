@@ -1,8 +1,8 @@
 package cache
 
 import (
+	"context"
 	"log"
-	"net/http"
 	"time"
 
 	redis "github.com/go-redis/redis/v8"
@@ -14,10 +14,10 @@ const (
 	redis_db   = 0
 )
 
-func Get(req *http.Request, key string) []byte {
+func Get(ctx context.Context, key string) []byte {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
-	data, err := conn.Get(req.Context(), key).Bytes()
+	data, err := conn.Get(ctx, key).Bytes()
 	if err != nil {
 		log.Println(err)
 		return nil
@@ -25,10 +25,10 @@ func Get(req *http.Request, key string) []byte {
 	return data
 }
 
-func Exists(req *http.Request, key string) (exists bool) {
+func Exists(ctx context.Context, key string) (exists bool) {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
-	data, err := conn.Exists(req.Context(), key).Result()
+	data, err := conn.Exists(ctx, key).Result()
 	if err != nil {
 		log.Println(err)
 		exists = false
@@ -41,28 +41,28 @@ func Exists(req *http.Request, key string) (exists bool) {
 	return exists
 }
 
-func Del(req *http.Request, key string) {
+func Del(ctx context.Context, key string) {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
-	err := conn.Del(req.Context(), key).Err()
+	err := conn.Del(ctx, key).Err()
 	if err != nil {
 		log.Println(err)
 	}
 }
 
-func Set(req *http.Request, key string, val interface{}, exp int) {
+func Set(ctx context.Context, key string, val interface{}, exp int) {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
-	err := conn.Set(req.Context(), key, val, time.Duration(exp)*time.Second).Err()
+	err := conn.Set(ctx, key, val, time.Duration(exp)*time.Second).Err()
 	if err != nil {
 		log.Println(err)
 	}
 }
 
-func Exp(req *http.Request, key string, exp int) {
+func Exp(ctx context.Context, key string, exp int) {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
-	err := conn.Expire(req.Context(), key, time.Duration(exp)*time.Second).Err()
+	err := conn.Expire(ctx, key, time.Duration(exp)*time.Second).Err()
 	if err != nil {
 		log.Println(err)
 	}
