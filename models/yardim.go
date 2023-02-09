@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	cache "github.com/ozgur-soft/deprem.io/cache"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
@@ -41,7 +42,7 @@ func (model *Yardim) Ara(ctx context.Context, data Yardim, skip int64, limit int
 		decoder.Decode(&list)
 		return list
 	}
-	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +64,7 @@ func (model *Yardim) Ara(ctx context.Context, data Yardim, skip int64, limit int
 }
 
 func (model *Yardim) Kaydet(ctx context.Context, data Yardim) string {
-	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
 	if err != nil {
 		log.Fatal(err)
 	}
