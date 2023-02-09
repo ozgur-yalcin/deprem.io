@@ -7,7 +7,7 @@ import (
 	"github.com/ozgur-soft/deprem.io/models"
 )
 
-func Iletisim(w http.ResponseWriter, r *http.Request) {
+func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
 	if page < 0 {

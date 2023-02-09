@@ -7,7 +7,7 @@ import (
 	"github.com/ozgur-soft/deprem.io/models"
 )
 
-func Yardim(w http.ResponseWriter, r *http.Request) {
+func YardimAra(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
 	if page < 0 {

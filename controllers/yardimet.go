@@ -12,7 +12,7 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
-func Yardimet(w http.ResponseWriter, r *http.Request) {
+func YardimetAra(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
 	if page < 0 {
@@ -62,7 +62,7 @@ func Yardimet(w http.ResponseWriter, r *http.Request) {
 	w.Write(response.JSON())
 }
 
-func YardimetExport(w http.ResponseWriter, r *http.Request) {
+func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 	file := xlsx.NewFile()
 	rows := []string{"Yardım tipi", "Ad soyad", "Telefon", "Şehir", "Hedef şehir", "Yardım durumu", "Açıklama", "IP adresi", "Oluşturma zamanı", "Güncelleme zamanı"}
 	sheet, err := file.AddSheet("Sheet1")
