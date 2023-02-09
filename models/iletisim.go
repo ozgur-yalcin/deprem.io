@@ -2,9 +2,9 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"log"
 
-	bson "go.mongodb.org/mongo-driver/bson"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -17,14 +17,14 @@ type Iletisim struct {
 	Ip      string `json:"ip,omitempty" bson:"ip,omitempty"`
 }
 
-func iletisim(ctx context.Context) (list []Iletisim) {
+func (model *Iletisim) Ara(ctx context.Context, data Iletisim) (list []Iletisim) {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection("iletisim")
-	cursor, err := collection.Find(ctx, bson.D{})
+	collection := client.Database("deprem").Collection(IletisimCollection)
+	cursor, err := collection.Find(ctx, data)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,4 +37,18 @@ func iletisim(ctx context.Context) (list []Iletisim) {
 		}
 	}
 	return list
+}
+
+func (model *Iletisim) Kaydet(ctx context.Context, data Iletisim) string {
+	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(ctx)
+	collection := client.Database("deprem").Collection(IletisimCollection)
+	insert, err := collection.InsertOne(ctx, data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return fmt.Sprintf("%v", insert.InsertedID)
 }
