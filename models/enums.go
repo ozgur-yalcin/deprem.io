@@ -1,4 +1,4 @@
-package deprem
+package models
 
 type (
 	AcilDurum    string

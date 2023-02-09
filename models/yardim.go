@@ -1,4 +1,4 @@
-package deprem
+package models
 
 import (
 	"context"
