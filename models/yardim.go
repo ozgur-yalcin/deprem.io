@@ -51,7 +51,7 @@ func (model *Yardim) Ara(ctx context.Context, search Yardim, skip int64, limit i
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection(YardimCollection)
+	collection := client.Database(os.Getenv("MONGODB")).Collection(YardimCollection)
 	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +73,7 @@ func (model *Yardim) Ekle(ctx context.Context, data Yardim) string {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection(YardimCollection)
+	collection := client.Database(os.Getenv("MONGODB")).Collection(YardimCollection)
 	insert, err := collection.InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)

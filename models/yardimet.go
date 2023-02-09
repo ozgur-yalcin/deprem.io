@@ -46,7 +46,7 @@ func (model *Yardimet) Ara(ctx context.Context, search Yardimet, skip int64, lim
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection(YardimetCollection)
+	collection := client.Database(os.Getenv("MONGODB")).Collection(YardimetCollection)
 	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +68,7 @@ func (model *Yardimet) Ekle(ctx context.Context, data Yardimet) string {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection(YardimetCollection)
+	collection := client.Database(os.Getenv("MONGODB")).Collection(YardimetCollection)
 	insert, err := collection.InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)

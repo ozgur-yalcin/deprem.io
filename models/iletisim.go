@@ -41,7 +41,7 @@ func (model *Iletisim) Ara(ctx context.Context, search Iletisim, skip int64, lim
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection(IletisimCollection)
+	collection := client.Database(os.Getenv("MONGODB")).Collection(IletisimCollection)
 	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
@@ -63,7 +63,7 @@ func (model *Iletisim) Ekle(ctx context.Context, data Iletisim) string {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	collection := client.Database("deprem").Collection(IletisimCollection)
+	collection := client.Database(os.Getenv("MONGODB")).Collection(IletisimCollection)
 	insert, err := collection.InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
