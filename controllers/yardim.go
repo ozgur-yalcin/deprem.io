@@ -11,7 +11,7 @@ func Yardim(w http.ResponseWriter, r *http.Request) {
 	search := yardim.Ara(r.Context(), models.Yardim{
 		AdSoyad: r.Form.Get("adSoyad"),
 		Adres:   r.Form.Get("adres"),
-	})
+	}, 0, 10)
 	if len(search) > 0 {
 		response := models.Response{Error: "Bu yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")

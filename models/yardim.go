@@ -27,14 +27,14 @@ type Yardim struct {
 	Ip              string `json:"ip,omitempty" bson:"ip,omitempty"`
 }
 
-func (model *Yardim) Ara(ctx context.Context, data Yardim) (list []Yardim) {
+func (model *Yardim) Ara(ctx context.Context, data Yardim, skip int64, limit int64) (list []Yardim) {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
 	collection := client.Database("deprem").Collection(YardimCollection)
-	cursor, err := collection.Find(ctx, data)
+	cursor, err := collection.Find(ctx, data, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}

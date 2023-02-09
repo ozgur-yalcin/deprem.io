@@ -12,7 +12,7 @@ func Iletisim(w http.ResponseWriter, r *http.Request) {
 		AdSoyad: r.Form.Get("adSoyad"),
 		Email:   r.Form.Get("email"),
 		Mesaj:   r.Form.Get("mesaj"),
-	})
+	}, 0, 10)
 	if len(search) > 0 {
 		response := models.Response{Error: "Bu iletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")

@@ -17,14 +17,14 @@ type Iletisim struct {
 	Ip      string `json:"ip,omitempty" bson:"ip,omitempty"`
 }
 
-func (model *Iletisim) Ara(ctx context.Context, data Iletisim) (list []Iletisim) {
+func (model *Iletisim) Ara(ctx context.Context, data Iletisim, skip int64, limit int64) (list []Iletisim) {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
 	collection := client.Database("deprem").Collection(IletisimCollection)
-	cursor, err := collection.Find(ctx, data)
+	cursor, err := collection.Find(ctx, data, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}

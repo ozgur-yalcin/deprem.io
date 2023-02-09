@@ -22,14 +22,14 @@ type Yardimet struct {
 	Ip           string `json:"ip,omitempty" bson:"ip,omitempty"`
 }
 
-func (model *Yardimet) Ara(ctx context.Context, data Yardimet) (list []Yardimet) {
+func (model *Yardimet) Ara(ctx context.Context, data Yardimet, skip int64, limit int64) (list []Yardimet) {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
 	collection := client.Database("deprem").Collection(YardimetCollection)
-	cursor, err := collection.Find(ctx, data)
+	cursor, err := collection.Find(ctx, data, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}

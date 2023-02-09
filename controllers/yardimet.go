@@ -10,7 +10,8 @@ func Yardimet(w http.ResponseWriter, r *http.Request) {
 	yardimet := new(models.Yardimet)
 	search := yardimet.Ara(r.Context(), models.Yardimet{
 		AdSoyad: r.Form.Get("adSoyad"),
-	})
+		Sehir:   r.Form.Get("sehir"),
+	}, 0, 10)
 	if len(search) > 0 {
 		response := models.Response{Error: "Bu iletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
