@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ozgur-soft/deprem.io/models"
@@ -15,7 +17,8 @@ import (
 
 func Yardimet(w http.ResponseWriter, r *http.Request) {
 	yardimet := new(models.Yardimet)
-	search := yardimet.Ara(r.Context(), models.Yardimet{Id: r.Form.Get("id")}, 0, 1)
+	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
+	search := yardimet.Ara(r.Context(), models.Yardimet{Id: id}, 0, 1)
 	if len(search) > 0 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")

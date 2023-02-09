@@ -3,14 +3,17 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"path"
 	"strconv"
+	"strings"
 
 	"github.com/ozgur-soft/deprem.io/models"
 )
 
 func Yardim(w http.ResponseWriter, r *http.Request) {
 	yardim := new(models.Yardim)
-	search := yardim.Ara(r.Context(), models.Yardim{Id: r.Form.Get("id")}, 0, 1)
+	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
+	search := yardim.Ara(r.Context(), models.Yardim{Id: id}, 0, 1)
 	if len(search) == 1 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
