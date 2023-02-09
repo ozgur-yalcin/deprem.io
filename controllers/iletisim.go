@@ -32,7 +32,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&data)
 	search := iletisim.Ara(r.Context(), models.Iletisim{AdSoyad: data.AdSoyad, Email: data.Email, Mesaj: data.Mesaj}, 0, 1)
 	if len(search) > 0 {
-		response := models.Response{Error: "Bu iletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
+		response := models.Response{Error: "İletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response.JSON())
@@ -40,7 +40,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	}
 	id := iletisim.Ekle(r.Context(), data)
 	if id != "" {
-		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
+		response := models.Response{Message: "İletişim talebi başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		w.Write(response.JSON())

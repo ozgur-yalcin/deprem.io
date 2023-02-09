@@ -32,7 +32,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&data)
 	search := yardim.Ara(r.Context(), models.Yardim{AdSoyad: data.AdSoyad, Adres: data.Adres}, 0, 1)
 	if len(search) > 0 {
-		response := models.Response{Error: "Bu yardım bildirimi daha önce veritabanımıza eklendi."}
+		response := models.Response{Error: "Yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response.JSON())
