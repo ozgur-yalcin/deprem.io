@@ -39,7 +39,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	if id != "" {
 		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		w.Write(response.JSON())
 		return
 	}
