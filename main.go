@@ -19,6 +19,7 @@ func main() {
 	http.HandleFunc("/iletisim", controllers.Iletisim)
 	http.HandleFunc("/yardim", controllers.Yardim)
 	http.HandleFunc("/yardimet", controllers.Yardimet)
+	http.HandleFunc("/yardimet/export", controllers.YardimetExport)
 	http.HandleFunc("/flushall", controllers.Flushall)
 	http.HandleFunc("/getstats", controllers.GetStats)
 	server := http.Server{Addr: httpHost + httpPort, ReadTimeout: 30 * time.Second, WriteTimeout: 30 * time.Second}
