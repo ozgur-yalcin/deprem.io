@@ -8,12 +8,13 @@ import (
 	"strings"
 
 	"github.com/ozgur-soft/deprem.io/models"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Iletisim(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := iletisim.Ara(r.Context(), models.Iletisim{Id: id}, 0, 1)
+	search := iletisim.Ara(r.Context(), bson.D{{"_id", id}}, 0, 1)
 	if len(search) == 1 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
@@ -30,8 +31,8 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	data := models.Iletisim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	search := iletisim.Ara(r.Context(), models.Iletisim{AdSoyad: data.AdSoyad, Email: data.Email, Mesaj: data.Mesaj}, 0, 1)
-	if len(search) > 0 {
+	exists := iletisim.Ara(r.Context(), bson.D{{"adSoyad", r.Form.Get("adSoyad")}, {"email", r.Form.Get("email")}, {"mesaj", r.Form.Get("mesaj")}}, 0, 1)
+	if len(exists) > 0 {
 		response := models.Response{Error: "İletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
@@ -65,34 +66,10 @@ func IletisimAra(w http.ResponseWriter, r *http.Request) {
 		limit = 100
 	}
 	iletisim := new(models.Iletisim)
-	search := iletisim.Ara(r.Context(), models.Iletisim{
-		AdSoyad: r.Form.Get("adSoyad"),
-		Email:   r.Form.Get("email"),
-		Mesaj:   r.Form.Get("mesaj"),
-	}, (page-1)*limit, limit)
-	if len(search) > 0 {
-		response := models.Response{Error: "Bu iletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(response.JSON())
-		return
-	}
-	id := iletisim.Ekle(r.Context(), models.Iletisim{
-		AdSoyad: r.Form.Get("adSoyad"),
-		Email:   r.Form.Get("email"),
-		Telefon: r.Form.Get("telefon"),
-		Mesaj:   r.Form.Get("mesaj"),
-		IPv4:    r.Header.Get("X-Forwarded-For"),
-	})
-	if id != "" {
-		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(response.JSON())
-		return
-	}
-	response := models.Response{Error: "Hata! Yardım dökümanı kaydedilemedi!"}
+	filter := bson.D{}
+	search := iletisim.Ara(r.Context(), filter, (page-1)*limit, limit)
+	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write(response.JSON())
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }

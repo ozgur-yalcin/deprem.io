@@ -10,6 +10,7 @@ import (
 	"time"
 
 	cache "github.com/ozgur-soft/deprem.io/cache"
+	bson "go.mongodb.org/mongo-driver/bson"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -32,7 +33,7 @@ type Yardimet struct {
 	UpdatedAt    time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Yardimet) Ara(ctx context.Context, search Yardimet, skip int64, limit int64) (list []Yardimet) {
+func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardimet) {
 	cachekey := fmt.Sprintf("%v_%v_%v", YardimetCollection, skip, limit)
 	if cache.Get(ctx, cachekey) != nil {
 		data := cache.Get(ctx, cachekey)

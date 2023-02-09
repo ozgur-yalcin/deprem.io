@@ -13,12 +13,13 @@ import (
 
 	"github.com/ozgur-soft/deprem.io/models"
 	"github.com/tealeg/xlsx"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Yardimet(w http.ResponseWriter, r *http.Request) {
 	yardimet := new(models.Yardimet)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := yardimet.Ara(r.Context(), models.Yardimet{Id: id}, 0, 1)
+	search := yardimet.Ara(r.Context(), bson.D{{"_id", id}}, 0, 1)
 	if len(search) > 0 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
@@ -35,8 +36,8 @@ func YardimetEkle(w http.ResponseWriter, r *http.Request) {
 	yardimet := new(models.Yardimet)
 	data := models.Yardimet{}
 	json.NewDecoder(r.Body).Decode(&data)
-	search := yardimet.Ara(r.Context(), models.Yardimet{AdSoyad: data.AdSoyad, Sehir: data.Sehir}, 0, 1)
-	if len(search) > 0 {
+	exists := yardimet.Ara(r.Context(), bson.D{{"adSoyad", r.Form.Get("adSoyad")}, {"sehir", r.Form.Get("sehir")}}, 0, 1)
+	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım kaydı daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
@@ -70,10 +71,32 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 		limit = 100
 	}
 	yardimet := new(models.Yardimet)
-	search := yardimet.Ara(r.Context(), models.Yardimet{
-		AdSoyad: r.Form.Get("adSoyad"),
-		Sehir:   r.Form.Get("sehir"),
-	}, (page-1)*limit, limit)
+	filter := bson.D{}
+	if r.Form.Get("yardimTipi") != "" {
+		filter = append(filter, bson.E{"yardimTipi", r.Form.Get("yardimTipi")})
+	}
+	if r.Form.Get("adSoyad") != "" {
+		filter = append(filter, bson.E{"adSoyad", r.Form.Get("adSoyad")})
+	}
+	if r.Form.Get("telefon") != "" {
+		filter = append(filter, bson.E{"telefon", r.Form.Get("telefon")})
+	}
+	if r.Form.Get("sehir") != "" {
+		filter = append(filter, bson.E{"sehir", r.Form.Get("sehir")})
+	}
+	if r.Form.Get("hedefSehir") != "" {
+		filter = append(filter, bson.E{"hedefSehir", r.Form.Get("hedefSehir")})
+	}
+	if r.Form.Get("yardimDurumu") != "" {
+		filter = append(filter, bson.E{"yardimDurumu", r.Form.Get("yardimDurumu")})
+	}
+	if r.Form.Get("aciklama") != "" {
+		filter = append(filter, bson.E{"aciklama", r.Form.Get("aciklama")})
+	}
+	if r.Form.Get("ipAdresi") != "" {
+		filter = append(filter, bson.E{"ipAdresi", r.Form.Get("ipAdresi")})
+	}
+	search := yardimet.Ara(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -96,7 +119,7 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		sheet.SetColWidth(i+1, i+1, 20.0)
 	}
 	yardimet := new(models.Yardimet)
-	list := yardimet.Ara(r.Context(), models.Yardimet{}, 0, 100000)
+	list := yardimet.Ara(r.Context(), bson.D{}, 0, 100000)
 	for id, data := range list {
 		xlsdata := sheet.AddRow()
 		cell := xlsdata.AddCell()

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	cache "github.com/ozgur-soft/deprem.io/cache"
+	bson "go.mongodb.org/mongo-driver/bson"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -27,7 +28,7 @@ type Iletisim struct {
 	UpdatedAt time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Iletisim) Ara(ctx context.Context, search Iletisim, skip int64, limit int64) (list []Iletisim) {
+func (model *Iletisim) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Iletisim) {
 	cachekey := fmt.Sprintf("%v_%v_%v", IletisimCollection, skip, limit)
 	if cache.Get(ctx, cachekey) != nil {
 		data := cache.Get(ctx, cachekey)

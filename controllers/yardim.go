@@ -8,12 +8,13 @@ import (
 	"strings"
 
 	"github.com/ozgur-soft/deprem.io/models"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Yardim(w http.ResponseWriter, r *http.Request) {
 	yardim := new(models.Yardim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := yardim.Ara(r.Context(), models.Yardim{Id: id}, 0, 1)
+	search := yardim.Ara(r.Context(), bson.D{{"_id", id}}, 0, 1)
 	if len(search) == 1 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
@@ -30,8 +31,8 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 	yardim := new(models.Yardim)
 	data := models.Yardim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	search := yardim.Ara(r.Context(), models.Yardim{AdSoyad: data.AdSoyad, Adres: data.Adres}, 0, 1)
-	if len(search) > 0 {
+	exists := yardim.Ara(r.Context(), bson.D{{"adSoyad", r.Form.Get("adSoyad")}, {"adres", r.Form.Get("adres")}}, 0, 1)
+	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
@@ -65,10 +66,8 @@ func YardimAra(w http.ResponseWriter, r *http.Request) {
 		limit = 100
 	}
 	yardim := new(models.Yardim)
-	search := yardim.Ara(r.Context(), models.Yardim{
-		AdSoyad: r.Form.Get("adSoyad"),
-		Adres:   r.Form.Get("adres"),
-	}, (page-1)*limit, limit)
+	filter := bson.D{}
+	search := yardim.Ara(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
