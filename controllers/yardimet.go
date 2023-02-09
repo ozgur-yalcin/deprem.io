@@ -32,9 +32,16 @@ func Yardimet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	id := yardimet.Kaydet(r.Context(), models.Yardimet{
-		AdSoyad: r.Form.Get("adSoyad"),
-		Telefon: r.Form.Get("telefon"),
-		Ip:      r.Header.Get("X-Forwarded-For"),
+		YardimTipi:   r.Form.Get("yardimTipi"),
+		AdSoyad:      r.Form.Get("adSoyad"),
+		Telefon:      r.Form.Get("telefon"),
+		Sehir:        r.Form.Get("sehir"),
+		Ilce:         r.Form.Get("ilce"),
+		HedefSehir:   r.Form.Get("hedefSehir"),
+		YardimDurumu: r.Form.Get("yardimDurumu"),
+		Aciklama:     r.Form.Get("aciklama"),
+		Fields:       r.Form.Get("fields"),
+		Ip:           r.Header.Get("X-Forwarded-For"),
 	})
 	if id != "" {
 		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
