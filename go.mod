@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/tealeg/xlsx v1.0.5
 	go.mongodb.org/mongo-driver v1.11.1
 )
 

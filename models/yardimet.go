@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	cache "github.com/ozgur-soft/deprem.io/cache"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
@@ -16,16 +17,18 @@ import (
 const YardimetCollection = "yardimet"
 
 type Yardimet struct {
-	YardimTipi   string `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"`
-	AdSoyad      string `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
-	Telefon      string `json:"telefon,omitempty" bson:"telefon,omitempty"`
-	Sehir        string `json:"sehir,omitempty" bson:"sehir,omitempty"`
-	Ilce         string `json:"ilce,omitempty" bson:"ilce,omitempty"` // TODO: ilçe geçici required false yapıldı
-	HedefSehir   string `json:"hedefSehir,omitempty" bson:"hedefSehir,omitempty"`
-	Aciklama     string `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
-	Fields       any    `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
-	YardimDurumu string `json:"yardimDurumu,omitempty" bson:"yardimDurumu,omitempty"`
-	Ip           string `json:"ip,omitempty" bson:"ip,omitempty"`
+	YardimTipi   string    `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"`
+	AdSoyad      string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
+	Telefon      string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
+	Sehir        string    `json:"sehir,omitempty" bson:"sehir,omitempty"`
+	Ilce         string    `json:"ilce,omitempty" bson:"ilce,omitempty"` // TODO: ilçe geçici required false yapıldı
+	HedefSehir   string    `json:"hedefSehir,omitempty" bson:"hedefSehir,omitempty"`
+	Aciklama     string    `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
+	Fields       any       `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
+	YardimDurumu string    `json:"yardimDurumu,omitempty" bson:"yardimDurumu,omitempty"`
+	IPv4         string    `json:"ip,omitempty" bson:"ip,omitempty"`
+	CreatedAt    time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+	UpdatedAt    time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
 func (model *Yardimet) Ara(ctx context.Context, data Yardimet, skip int64, limit int64) (list []Yardimet) {

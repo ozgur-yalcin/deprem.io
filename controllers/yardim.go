@@ -45,7 +45,7 @@ func Yardim(w http.ResponseWriter, r *http.Request) {
 		TweetLink:     r.Form.Get("tweetLink"),
 		GoogleMapLink: r.Form.Get("googleMapLink"),
 		Fields:        r.Form.Get("fields"),
-		Ip:            r.Header.Get("X-Forwarded-For"),
+		IPv4:          r.Header.Get("X-Forwarded-For"),
 	})
 	if id != "" {
 		response := models.Response{Message: "Yardım talebiniz başarıyla alındı"}

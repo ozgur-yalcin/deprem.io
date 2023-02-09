@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	cache "github.com/ozgur-soft/deprem.io/cache"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
@@ -16,11 +17,13 @@ import (
 const IletisimCollection = "iletisim"
 
 type Iletisim struct {
-	AdSoyad string `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
-	Email   string `json:"email,omitempty" bson:"email,omitempty"`
-	Telefon string `json:"telefon,omitempty" bson:"telefon,omitempty"`
-	Mesaj   string `json:"mesaj,omitempty" bson:"mesaj,omitempty"`
-	Ip      string `json:"ip,omitempty" bson:"ip,omitempty"`
+	AdSoyad   string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
+	Email     string    `json:"email,omitempty" bson:"email,omitempty"`
+	Telefon   string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
+	Mesaj     string    `json:"mesaj,omitempty" bson:"mesaj,omitempty"`
+	IPv4      string    `json:"ip,omitempty" bson:"ip,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
 func (model *Iletisim) Ara(ctx context.Context, data Iletisim, skip int64, limit int64) (list []Iletisim) {

@@ -37,7 +37,7 @@ func Iletisim(w http.ResponseWriter, r *http.Request) {
 		Email:   r.Form.Get("email"),
 		Telefon: r.Form.Get("telefon"),
 		Mesaj:   r.Form.Get("mesaj"),
-		Ip:      r.Header.Get("X-Forwarded-For"),
+		IPv4:    r.Header.Get("X-Forwarded-For"),
 	})
 	if id != "" {
 		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
