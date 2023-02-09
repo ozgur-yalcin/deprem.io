@@ -9,6 +9,8 @@ import (
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const YardimetCollection = "yardimet"
+
 type Yardimet struct {
 	YardimTipi   string `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"`
 	AdSoyad      string `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`

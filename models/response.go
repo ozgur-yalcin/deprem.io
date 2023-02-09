@@ -2,12 +2,6 @@ package models
 
 import "encoding/json"
 
-const (
-	IletisimCollection = "iletisim"
-	YardimCollection   = "yardim"
-	YardimetCollection = "yardimet"
-)
-
 type Response struct {
 	Error   string `json:"error,omitempty"`
 	Message string `json:"message,omitempty"`

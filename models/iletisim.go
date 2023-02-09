@@ -9,6 +9,8 @@ import (
 	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const IletisimCollection = "iletisim"
+
 type Iletisim struct {
 	AdSoyad string `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Email   string `json:"email,omitempty" bson:"email,omitempty"`
