@@ -17,8 +17,10 @@ const (
 func main() {
 	http.HandleFunc("/", controllers.Anasayfa)
 	http.HandleFunc("/iletisim", controllers.Iletisim)
-	http.HandleFunc("/yardim", controllers.Iletisim)
-	http.HandleFunc("/yardimet", controllers.Iletisim)
+	http.HandleFunc("/yardim", controllers.Yardim)
+	http.HandleFunc("/yardimet", controllers.Yardimet)
+	http.HandleFunc("/flushall", controllers.Flushall)
+	http.HandleFunc("/getstats", controllers.GetStats)
 	server := http.Server{Addr: httpHost + httpPort, ReadTimeout: 30 * time.Second, WriteTimeout: 30 * time.Second}
 	// ssl için server.ListenAndServeTLS(".cert dosyası", ".key dosyası") kullanılmalıdır.
 	if e := server.ListenAndServe(); e != nil {

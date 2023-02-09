@@ -41,7 +41,7 @@ func Exists(ctx context.Context, key string) (exists bool) {
 	return exists
 }
 
-func Del(ctx context.Context, key string) {
+func Delete(ctx context.Context, key string) {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
 	err := conn.Del(ctx, key).Err()
@@ -59,10 +59,19 @@ func Set(ctx context.Context, key string, val interface{}, exp int) {
 	}
 }
 
-func Exp(ctx context.Context, key string, exp int) {
+func Expire(ctx context.Context, key string, exp int) {
 	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
 	defer conn.Close()
 	err := conn.Expire(ctx, key, time.Duration(exp)*time.Second).Err()
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func Flush(ctx context.Context) {
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: redis_host, Password: redis_pass, DB: redis_db})
+	defer conn.Close()
+	err := conn.FlushDB(ctx).Err()
 	if err != nil {
 		log.Println(err)
 	}
