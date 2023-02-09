@@ -24,6 +24,7 @@ type Yardimet struct {
 	Ilce         string    `json:"ilce,omitempty" bson:"ilce,omitempty"` // TODO: ilçe geçici required false yapıldı
 	HedefSehir   string    `json:"hedefSehir,omitempty" bson:"hedefSehir,omitempty"`
 	Aciklama     string    `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
+	Fields       any       `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
 	YardimDurumu string    `json:"yardimDurumu,omitempty" bson:"yardimDurumu,omitempty"`
 	IPv4         string    `json:"ip,omitempty" bson:"ip,omitempty"`
 	CreatedAt    time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
