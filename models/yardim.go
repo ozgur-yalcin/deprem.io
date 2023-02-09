@@ -17,6 +17,7 @@ import (
 const YardimCollection = "yardim"
 
 type Yardim struct {
+	Id              any       `json:"_id,omitempty" bson:"_id,omitempty"`
 	YardimTipi      string    `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"` // Gıda, İlaç, Enkaz, Isınma, Kayıp
 	AdSoyad         string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Telefon         string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
@@ -36,7 +37,7 @@ type Yardim struct {
 	UpdatedAt       time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Yardim) Ara(ctx context.Context, data Yardim, skip int64, limit int64) (list []Yardim) {
+func (model *Yardim) Ara(ctx context.Context, search Yardim, skip int64, limit int64) (list []Yardim) {
 	cachekey := fmt.Sprintf("%v_%v_%v", YardimCollection, skip, limit)
 	if cache.Get(ctx, cachekey) != nil {
 		data := cache.Get(ctx, cachekey)
@@ -51,7 +52,7 @@ func (model *Yardim) Ara(ctx context.Context, data Yardim, skip int64, limit int
 	}
 	defer client.Disconnect(ctx)
 	collection := client.Database("deprem").Collection(YardimCollection)
-	cursor, err := collection.Find(ctx, data, mongooptions.Find().SetSkip(skip).SetLimit(limit))
+	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,7 +67,7 @@ func (model *Yardim) Ara(ctx context.Context, data Yardim, skip int64, limit int
 	return list
 }
 
-func (model *Yardim) Kaydet(ctx context.Context, data Yardim) string {
+func (model *Yardim) Ekle(ctx context.Context, data Yardim) string {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
 	if err != nil {
 		log.Fatal(err)

@@ -16,9 +16,15 @@ const (
 
 func main() {
 	http.HandleFunc("/", controllers.Anasayfa)
+	http.HandleFunc("/iletisim", controllers.Iletisim)
 	http.HandleFunc("/iletisim/ara", controllers.IletisimAra)
+	http.HandleFunc("/iletisim/ekle", controllers.IletisimEkle)
+	http.HandleFunc("/yardim", controllers.Yardim)
 	http.HandleFunc("/yardim/ara", controllers.YardimAra)
+	http.HandleFunc("/yardim/ekle", controllers.YardimEkle)
+	http.HandleFunc("/yardimet", controllers.Yardimet)
 	http.HandleFunc("/yardimet/ara", controllers.YardimetAra)
+	http.HandleFunc("/yardimet/ekle", controllers.YardimetEkle)
 	http.HandleFunc("/yardimet/rapor", controllers.YardimetRapor)
 	http.HandleFunc("/flushall", controllers.Flushall)
 	http.HandleFunc("/getstats", controllers.GetStats)

@@ -17,6 +17,7 @@ import (
 const YardimetCollection = "yardimet"
 
 type Yardimet struct {
+	Id           any       `json:"_id,omitempty" bson:"_id,omitempty"`
 	YardimTipi   string    `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"`
 	AdSoyad      string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Telefon      string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
@@ -31,7 +32,7 @@ type Yardimet struct {
 	UpdatedAt    time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Yardimet) Ara(ctx context.Context, data Yardimet, skip int64, limit int64) (list []Yardimet) {
+func (model *Yardimet) Ara(ctx context.Context, search Yardimet, skip int64, limit int64) (list []Yardimet) {
 	cachekey := fmt.Sprintf("%v_%v_%v", YardimetCollection, skip, limit)
 	if cache.Get(ctx, cachekey) != nil {
 		data := cache.Get(ctx, cachekey)
@@ -46,7 +47,7 @@ func (model *Yardimet) Ara(ctx context.Context, data Yardimet, skip int64, limit
 	}
 	defer client.Disconnect(ctx)
 	collection := client.Database("deprem").Collection(YardimetCollection)
-	cursor, err := collection.Find(ctx, data, mongooptions.Find().SetSkip(skip).SetLimit(limit))
+	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +62,7 @@ func (model *Yardimet) Ara(ctx context.Context, data Yardimet, skip int64, limit
 	return list
 }
 
-func (model *Yardimet) Kaydet(ctx context.Context, data Yardimet) string {
+func (model *Yardimet) Ekle(ctx context.Context, data Yardimet) string {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
 	if err != nil {
 		log.Fatal(err)

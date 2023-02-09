@@ -1,11 +1,53 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/ozgur-soft/deprem.io/models"
 )
+
+func Iletisim(w http.ResponseWriter, r *http.Request) {
+	iletisim := new(models.Iletisim)
+	search := iletisim.Ara(r.Context(), models.Iletisim{Id: r.Form.Get("id")}, 0, 1)
+	if len(search) == 1 {
+		response, _ := json.MarshalIndent(search[0], " ", " ")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
+	response := models.Response{Error: "İletişim talebi bulunamadı!"}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(response.JSON())
+}
+
+func IletisimEkle(w http.ResponseWriter, r *http.Request) {
+	iletisim := new(models.Iletisim)
+	data := models.Iletisim{}
+	json.NewDecoder(r.Body).Decode(&data)
+	search := iletisim.Ara(r.Context(), models.Iletisim{AdSoyad: data.AdSoyad, Email: data.Email, Mesaj: data.Mesaj}, 0, 1)
+	if len(search) > 0 {
+		response := models.Response{Error: "Bu iletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(response.JSON())
+		return
+	}
+	id := iletisim.Ekle(r.Context(), data)
+	if id != "" {
+		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(response.JSON())
+		return
+	}
+	response := models.Response{Error: "Hata!"}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write(response.JSON())
+}
 
 func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
@@ -32,7 +74,7 @@ func IletisimAra(w http.ResponseWriter, r *http.Request) {
 		w.Write(response.JSON())
 		return
 	}
-	id := iletisim.Kaydet(r.Context(), models.Iletisim{
+	id := iletisim.Ekle(r.Context(), models.Iletisim{
 		AdSoyad: r.Form.Get("adSoyad"),
 		Email:   r.Form.Get("email"),
 		Telefon: r.Form.Get("telefon"),

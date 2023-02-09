@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,6 +12,47 @@ import (
 	"github.com/ozgur-soft/deprem.io/models"
 	"github.com/tealeg/xlsx"
 )
+
+func Yardimet(w http.ResponseWriter, r *http.Request) {
+	yardimet := new(models.Yardimet)
+	search := yardimet.Ara(r.Context(), models.Yardimet{Id: r.Form.Get("id")}, 0, 1)
+	if len(search) > 0 {
+		response, _ := json.MarshalIndent(search[0], " ", " ")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(response)
+	}
+	response := models.Response{Error: "Yardım kaydı bulunamadı!"}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(response.JSON())
+}
+
+func YardimetEkle(w http.ResponseWriter, r *http.Request) {
+	yardimet := new(models.Yardimet)
+	data := models.Yardimet{}
+	json.NewDecoder(r.Body).Decode(&data)
+	search := yardimet.Ara(r.Context(), models.Yardimet{AdSoyad: data.AdSoyad, Sehir: data.Sehir}, 0, 1)
+	if len(search) > 0 {
+		response := models.Response{Error: "Bu yardım kaydı daha önce veritabanımıza eklendi."}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(response.JSON())
+		return
+	}
+	id := yardimet.Ekle(r.Context(), data)
+	if id != "" {
+		response := models.Response{Message: "Yardım kaydı başarıyla alındı"}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(response.JSON())
+		return
+	}
+	response := models.Response{Error: "Hata!"}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write(response.JSON())
+}
 
 func YardimetAra(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
@@ -29,37 +71,10 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 		AdSoyad: r.Form.Get("adSoyad"),
 		Sehir:   r.Form.Get("sehir"),
 	}, (page-1)*limit, limit)
-	if len(search) > 0 {
-		response := models.Response{Error: "Bu yardım bildirimi daha önce veritabanımıza eklendi."}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(response.JSON())
-		return
-	}
-	id := yardimet.Kaydet(r.Context(), models.Yardimet{
-		YardimTipi:   r.Form.Get("yardimTipi"),
-		AdSoyad:      r.Form.Get("adSoyad"),
-		Telefon:      r.Form.Get("telefon"),
-		Sehir:        r.Form.Get("sehir"),
-		Ilce:         r.Form.Get("ilce"),
-		HedefSehir:   r.Form.Get("hedefSehir"),
-		YardimDurumu: r.Form.Get("yardimDurumu"),
-		Aciklama:     r.Form.Get("aciklama"),
-		Fields:       r.Form.Get("fields"),
-		IPv4:         r.Header.Get("X-Forwarded-For"),
-		CreatedAt:    time.Now(),
-	})
-	if id != "" {
-		response := models.Response{Message: "İletişim talebiniz başarıyla alındı"}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(response.JSON())
-		return
-	}
-	response := models.Response{Error: "Hata! Yardım dökümanı kaydedilemedi!"}
+	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write(response.JSON())
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 
 func YardimetRapor(w http.ResponseWriter, r *http.Request) {

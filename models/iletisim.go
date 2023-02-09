@@ -17,6 +17,7 @@ import (
 const IletisimCollection = "iletisim"
 
 type Iletisim struct {
+	Id        any       `json:"_id,omitempty" bson:"_id,omitempty"`
 	AdSoyad   string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Email     string    `json:"email,omitempty" bson:"email,omitempty"`
 	Telefon   string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
@@ -26,7 +27,7 @@ type Iletisim struct {
 	UpdatedAt time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Iletisim) Ara(ctx context.Context, data Iletisim, skip int64, limit int64) (list []Iletisim) {
+func (model *Iletisim) Ara(ctx context.Context, search Iletisim, skip int64, limit int64) (list []Iletisim) {
 	cachekey := fmt.Sprintf("%v_%v_%v", IletisimCollection, skip, limit)
 	if cache.Get(ctx, cachekey) != nil {
 		data := cache.Get(ctx, cachekey)
@@ -41,7 +42,7 @@ func (model *Iletisim) Ara(ctx context.Context, data Iletisim, skip int64, limit
 	}
 	defer client.Disconnect(ctx)
 	collection := client.Database("deprem").Collection(IletisimCollection)
-	cursor, err := collection.Find(ctx, data, mongooptions.Find().SetSkip(skip).SetLimit(limit))
+	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +57,7 @@ func (model *Iletisim) Ara(ctx context.Context, data Iletisim, skip int64, limit
 	return list
 }
 
-func (model *Iletisim) Kaydet(ctx context.Context, data Iletisim) string {
+func (model *Iletisim) Ekle(ctx context.Context, data Iletisim) string {
 	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
 	if err != nil {
 		log.Fatal(err)
