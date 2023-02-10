@@ -8,7 +8,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-redis/redis/v8"
+	"github.com/ozgur-soft/deprem.io/cache"
 	"github.com/ozgur-soft/deprem.io/controllers"
+	"github.com/ozgur-soft/deprem.io/environment"
 )
 
 func certificate(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -42,7 +45,12 @@ func servehttps() error {
 	return server.ListenAndServeTLS("", "")
 }
 
+func connectredis() {
+	cache.Redis = redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost + ":" + environment.RedisPort, Password: environment.RedisPass, DB: 10})
+}
+
 func run() error {
+	connectredis()
 	err := make(chan error, 2)
 	go func() { err <- servehttp() }()
 	go func() { err <- servehttps() }()
