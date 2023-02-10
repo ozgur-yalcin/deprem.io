@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/ozgur-soft/deprem.io/cache"
 	"github.com/ozgur-soft/deprem.io/controllers"
 	"github.com/ozgur-soft/deprem.io/environment"
+	"github.com/redis/go-redis/v9"
 )
 
 func certificate(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
