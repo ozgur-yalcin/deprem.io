@@ -48,13 +48,7 @@ func Search(ctx context.Context, collection string, search bson.D, skip int64, l
 }
 
 func Add(ctx context.Context, collection string, data any) string {
-	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuthDb)
-	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer cli.Disconnect(ctx)
-	add, err := cli.Database(environment.MongoDb).Collection(collection).InsertOne(ctx, data)
+	add, err := client.Database(environment.MongoDb).Collection(collection).InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
 	}
