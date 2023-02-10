@@ -9,6 +9,7 @@ import (
 
 	"github.com/ozgur-soft/deprem.io/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Iletisim(w http.ResponseWriter, r *http.Request) {
@@ -57,19 +58,19 @@ func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	filter := bson.D{}
 	if r.Form.Get("adSoyad") != "" {
-		filter = append(filter, bson.E{"adSoyad", bson.D{{"$regex", r.Form.Get("adSoyad")}}})
+		filter = append(filter, bson.E{"adSoyad", bson.D{{"$regex", primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
 	}
 	if r.Form.Get("email") != "" {
-		filter = append(filter, bson.E{"email", bson.D{{"$regex", r.Form.Get("email")}}})
+		filter = append(filter, bson.E{"email", bson.D{{"$regex", primitive.Regex{r.Form.Get("email"), "i"}}}})
 	}
 	if r.Form.Get("telefon") != "" {
-		filter = append(filter, bson.E{"telefon", bson.D{{"$regex", r.Form.Get("telefon")}}})
+		filter = append(filter, bson.E{"telefon", bson.D{{"$regex", primitive.Regex{r.Form.Get("telefon"), "i"}}}})
 	}
 	if r.Form.Get("mesaj") != "" {
-		filter = append(filter, bson.E{"mesaj", bson.D{{"$regex", r.Form.Get("mesaj")}}})
+		filter = append(filter, bson.E{"mesaj", bson.D{{"$regex", primitive.Regex{r.Form.Get("mesaj"), "i"}}}})
 	}
 	if r.Form.Get("ip") != "" {
-		filter = append(filter, bson.E{"ip", bson.D{{"$regex", r.Form.Get("ip")}}})
+		filter = append(filter, bson.E{"ip", bson.D{{"$regex", primitive.Regex{r.Form.Get("ip"), "i"}}}})
 	}
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)

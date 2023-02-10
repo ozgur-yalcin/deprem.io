@@ -14,6 +14,7 @@ import (
 	"github.com/ozgur-soft/deprem.io/models"
 	"github.com/tealeg/xlsx"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Yardimet(w http.ResponseWriter, r *http.Request) {
@@ -62,28 +63,28 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 	yardimet := new(models.Yardimet)
 	filter := bson.D{}
 	if r.Form.Get("yardimTipi") != "" {
-		filter = append(filter, bson.E{"yardimTipi", r.Form.Get("yardimTipi")})
+		filter = append(filter, bson.E{"yardimTipi", bson.D{{"$regex", primitive.Regex{r.Form.Get("yardimTipi"), "i"}}}})
 	}
 	if r.Form.Get("adSoyad") != "" {
-		filter = append(filter, bson.E{"adSoyad", r.Form.Get("adSoyad")})
+		filter = append(filter, bson.E{"adSoyad", bson.D{{"$regex", primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
 	}
 	if r.Form.Get("telefon") != "" {
-		filter = append(filter, bson.E{"telefon", r.Form.Get("telefon")})
+		filter = append(filter, bson.E{"telefon", bson.D{{"$regex", primitive.Regex{r.Form.Get("telefon"), "i"}}}})
 	}
 	if r.Form.Get("sehir") != "" {
-		filter = append(filter, bson.E{"sehir", r.Form.Get("sehir")})
+		filter = append(filter, bson.E{"sehir", bson.D{{"$regex", primitive.Regex{r.Form.Get("sehir"), "i"}}}})
 	}
 	if r.Form.Get("hedefSehir") != "" {
-		filter = append(filter, bson.E{"hedefSehir", r.Form.Get("hedefSehir")})
+		filter = append(filter, bson.E{"hedefSehir", bson.D{{"$regex", primitive.Regex{r.Form.Get("hedefSehir"), "i"}}}})
 	}
 	if r.Form.Get("aciklama") != "" {
-		filter = append(filter, bson.E{"aciklama", r.Form.Get("aciklama")})
+		filter = append(filter, bson.E{"aciklama", bson.D{{"$regex", primitive.Regex{r.Form.Get("aciklama"), "i"}}}})
 	}
 	if r.Form.Get("yardimDurumu") != "" {
-		filter = append(filter, bson.E{"yardimDurumu", r.Form.Get("yardimDurumu")})
+		filter = append(filter, bson.E{"yardimDurumu", bson.D{{"$regex", primitive.Regex{r.Form.Get("yardimDurumu"), "i"}}}})
 	}
 	if r.Form.Get("ip") != "" {
-		filter = append(filter, bson.E{"ip", r.Form.Get("ip")})
+		filter = append(filter, bson.E{"ip", bson.D{{"$regex", primitive.Regex{r.Form.Get("ip"), "i"}}}})
 	}
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
