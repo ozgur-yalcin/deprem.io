@@ -18,7 +18,7 @@ import (
 const YardimCollection = "yardim"
 
 type Yardim struct {
-	Id              any                `json:"_id,omitempty" bson:"_id,omitempty"`
+	Id              primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	YardimTipi      string             `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"` // Gıda, İlaç, Enkaz, Isınma, Kayıp
 	AdSoyad         string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Telefon         string             `json:"telefon,omitempty" bson:"telefon,omitempty"`

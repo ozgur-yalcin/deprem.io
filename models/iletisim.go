@@ -18,7 +18,7 @@ import (
 const IletisimCollection = "iletisim"
 
 type Iletisim struct {
-	Id        any                `json:"_id,omitempty" bson:"_id,omitempty"`
+	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	AdSoyad   string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Email     string             `json:"email,omitempty" bson:"email,omitempty"`
 	Telefon   string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
