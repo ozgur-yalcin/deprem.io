@@ -16,7 +16,7 @@ import (
 func Iletisim(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := iletisim.Ara(r.Context(), bson.D{{"_id", id}}, 0, 1)
+	search := iletisim.Ara(r.Context(), bson.D{{Key: "_id", Value: id}}, 0, 1)
 	if len(search) == 1 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
@@ -33,7 +33,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	data := models.Iletisim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := iletisim.Ara(r.Context(), bson.D{{"adSoyad", r.Form.Get("adSoyad")}, {"email", r.Form.Get("email")}, {"mesaj", r.Form.Get("mesaj")}}, 0, 1)
+	exists := iletisim.Ara(r.Context(), bson.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "email", Value: data.Email}, {Key: "mesaj", Value: data.Mesaj}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "İletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
@@ -60,19 +60,19 @@ func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	filter := bson.D{}
 	if r.Form.Get("adSoyad") != "" {
-		filter = append(filter, bson.E{"adSoyad", bson.D{{"$regex", primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
+		filter = append(filter, bson.E{Key: "adSoyad", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
 	}
 	if r.Form.Get("email") != "" {
-		filter = append(filter, bson.E{"email", bson.D{{"$regex", primitive.Regex{r.Form.Get("email"), "i"}}}})
+		filter = append(filter, bson.E{Key: "email", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("email"), "i"}}}})
 	}
 	if r.Form.Get("telefon") != "" {
-		filter = append(filter, bson.E{"telefon", bson.D{{"$regex", primitive.Regex{r.Form.Get("telefon"), "i"}}}})
+		filter = append(filter, bson.E{Key: "telefon", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("telefon"), "i"}}}})
 	}
 	if r.Form.Get("mesaj") != "" {
-		filter = append(filter, bson.E{"mesaj", bson.D{{"$regex", primitive.Regex{r.Form.Get("mesaj"), "i"}}}})
+		filter = append(filter, bson.E{Key: "mesaj", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("mesaj"), "i"}}}})
 	}
 	if r.Form.Get("ip") != "" {
-		filter = append(filter, bson.E{"ip", bson.D{{"$regex", primitive.Regex{r.Form.Get("ip"), "i"}}}})
+		filter = append(filter, bson.E{Key: "ip", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("ip"), "i"}}}})
 	}
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)

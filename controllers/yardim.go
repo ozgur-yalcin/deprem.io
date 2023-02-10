@@ -16,7 +16,7 @@ import (
 func Yardim(w http.ResponseWriter, r *http.Request) {
 	yardim := new(models.Yardim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := yardim.Ara(r.Context(), bson.D{{"_id", id}}, 0, 1)
+	search := yardim.Ara(r.Context(), bson.D{{Key: "_id", Value: id}}, 0, 1)
 	if len(search) == 1 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
@@ -33,7 +33,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 	yardim := new(models.Yardim)
 	data := models.Yardim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := yardim.Ara(r.Context(), bson.D{{"adSoyad", r.Form.Get("adSoyad")}, {"adres", r.Form.Get("adres")}}, 0, 1)
+	exists := yardim.Ara(r.Context(), bson.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "adres", Value: data.Adres}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
@@ -60,46 +60,46 @@ func YardimAra(w http.ResponseWriter, r *http.Request) {
 	yardim := new(models.Yardim)
 	filter := bson.D{}
 	if r.Form.Get("yardimTipi") != "" {
-		filter = append(filter, bson.E{"yardimTipi", bson.D{{"$regex", primitive.Regex{r.Form.Get("yardimTipi"), "i"}}}})
+		filter = append(filter, bson.E{Key: "yardimTipi", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("yardimTipi"), "i"}}}})
 	}
 	if r.Form.Get("adSoyad") != "" {
-		filter = append(filter, bson.E{"adSoyad", bson.D{{"$regex", primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
+		filter = append(filter, bson.E{Key: "adSoyad", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
 	}
 	if r.Form.Get("telefon") != "" {
-		filter = append(filter, bson.E{"telefon", bson.D{{"$regex", primitive.Regex{r.Form.Get("telefon"), "i"}}}})
+		filter = append(filter, bson.E{Key: "telefon", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("telefon"), "i"}}}})
 	}
 	if r.Form.Get("yedekTelefonlar") != "" {
-		filter = append(filter, bson.E{"yedekTelefonlar", bson.D{{"$regex", primitive.Regex{r.Form.Get("yedekTelefonlar"), "i"}}}})
+		filter = append(filter, bson.E{Key: "yedekTelefonlar", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("yedekTelefonlar"), "i"}}}})
 	}
 	if r.Form.Get("email") != "" {
-		filter = append(filter, bson.E{"email", bson.D{{"$regex", primitive.Regex{r.Form.Get("email"), "i"}}}})
+		filter = append(filter, bson.E{Key: "email", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("email"), "i"}}}})
 	}
 	if r.Form.Get("adres") != "" {
-		filter = append(filter, bson.E{"adres", bson.D{{"$regex", primitive.Regex{r.Form.Get("adres"), "i"}}}})
+		filter = append(filter, bson.E{Key: "adres", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("adres"), "i"}}}})
 	}
 	if r.Form.Get("adresTarifi") != "" {
-		filter = append(filter, bson.E{"adresTarifi", bson.D{{"$regex", primitive.Regex{r.Form.Get("adresTarifi"), "i"}}}})
+		filter = append(filter, bson.E{Key: "adresTarifi", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("adresTarifi"), "i"}}}})
 	}
 	if r.Form.Get("acilDurum") != "" {
-		filter = append(filter, bson.E{"acilDurum", bson.D{{"$regex", primitive.Regex{r.Form.Get("acilDurum"), "i"}}}})
+		filter = append(filter, bson.E{Key: "acilDurum", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("acilDurum"), "i"}}}})
 	}
 	if r.Form.Get("yardimDurumu") != "" {
-		filter = append(filter, bson.E{"yardimDurumu", bson.D{{"$regex", primitive.Regex{r.Form.Get("yardimDurumu"), "i"}}}})
+		filter = append(filter, bson.E{Key: "yardimDurumu", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("yardimDurumu"), "i"}}}})
 	}
 	if r.Form.Get("kisiSayisi") != "" {
-		filter = append(filter, bson.E{"kisiSayisi", bson.D{{"$regex", primitive.Regex{r.Form.Get("kisiSayisi"), "i"}}}})
+		filter = append(filter, bson.E{Key: "kisiSayisi", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("kisiSayisi"), "i"}}}})
 	}
 	if r.Form.Get("fizikiDurum") != "" {
-		filter = append(filter, bson.E{"fizikiDurum", bson.D{{"$regex", primitive.Regex{r.Form.Get("fizikiDurum"), "i"}}}})
+		filter = append(filter, bson.E{Key: "fizikiDurum", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("fizikiDurum"), "i"}}}})
 	}
 	if r.Form.Get("googleMapLink") != "" {
-		filter = append(filter, bson.E{"googleMapLink", bson.D{{"$regex", primitive.Regex{r.Form.Get("googleMapLink"), "i"}}}})
+		filter = append(filter, bson.E{Key: "googleMapLink", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("googleMapLink"), "i"}}}})
 	}
 	if r.Form.Get("tweetLink") != "" {
-		filter = append(filter, bson.E{"tweetLink", bson.D{{"$regex", primitive.Regex{r.Form.Get("tweetLink"), "i"}}}})
+		filter = append(filter, bson.E{Key: "tweetLink", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("tweetLink"), "i"}}}})
 	}
 	if r.Form.Get("ip") != "" {
-		filter = append(filter, bson.E{"ip", bson.D{{"$regex", primitive.Regex{r.Form.Get("ip"), "i"}}}})
+		filter = append(filter, bson.E{Key: "ip", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("ip"), "i"}}}})
 	}
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
