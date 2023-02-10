@@ -42,7 +42,7 @@ func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit
 		decoder.Decode(&list)
 		return list
 	}
-	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort)
+	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuth)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
@@ -65,7 +65,7 @@ func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit
 }
 
 func (model *Yardimet) Ekle(ctx context.Context, data Yardimet) string {
-	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort)
+	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuth)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)

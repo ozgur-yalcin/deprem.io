@@ -15,5 +15,6 @@ var (
 	MongoPort = os.Getenv("MONGO_PORT")
 	MongoUser = os.Getenv("MONGO_USER")
 	MongoPass = os.Getenv("MONGO_PASS")
+	MongoAuth = os.Getenv("MONGO_AUTH")
 	MongoDb   = os.Getenv("MONGO_DB")
 )
