@@ -3,10 +3,11 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/ozgur-soft/deprem.io/cache"
 )
 
-func Flushall(w http.ResponseWriter, r *http.Request) {
-	cache.Flush(r.Context())
-	w.Write([]byte("OK"))
+func Flushall(ctx *gin.Context) {
+	cache.Flush(ctx)
+	ctx.String(http.StatusOK, "OK")
 }

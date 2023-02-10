@@ -1,7 +1,11 @@
 package controllers
 
-import "net/http"
+import (
+	"net/http"
 
-func Anasayfa(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("deprem.io backend"))
+	"github.com/gin-gonic/gin"
+)
+
+func Anasayfa(ctx *gin.Context) {
+	ctx.String(http.StatusOK, "deprem.io backend")
 }
