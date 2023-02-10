@@ -23,7 +23,7 @@ type Yardimet struct {
 	AdSoyad      string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Telefon      string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
 	Sehir        string             `json:"sehir,omitempty" bson:"sehir,omitempty"`
-	Ilce         string             `json:"ilce,omitempty" bson:"ilce,omitempty"` // TODO: ilçe geçici required false yapıldı
+	Ilce         string             `json:"ilce,omitempty" bson:"ilce,omitempty"`
 	HedefSehir   string             `json:"hedefSehir,omitempty" bson:"hedefSehir,omitempty"`
 	Aciklama     string             `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
 	Fields       any                `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
