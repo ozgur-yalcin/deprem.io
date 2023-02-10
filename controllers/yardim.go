@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -39,46 +40,46 @@ func YardimEkle(ctx *gin.Context) {
 
 func YardimAra(ctx *gin.Context) {
 	filter := primitive.D{}
-	if ctx.Query("yardimTipi") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yardimTipi")) {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yardimTipi"), Options: "i"}}}})
 	}
-	if ctx.Query("adSoyad") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adSoyad")) {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adSoyad"), Options: "i"}}}})
 	}
-	if ctx.Query("telefon") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
-	if ctx.Query("yedekTelefonlar") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yedekTelefonlar")) {
 		filter = append(filter, primitive.E{Key: "yedekTelefonlar", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yedekTelefonlar"), Options: "i"}}}})
 	}
-	if ctx.Query("email") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("email")) {
 		filter = append(filter, primitive.E{Key: "email", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("email"), Options: "i"}}}})
 	}
-	if ctx.Query("adres") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adres")) {
 		filter = append(filter, primitive.E{Key: "adres", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adres"), Options: "i"}}}})
 	}
-	if ctx.Query("adresTarifi") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adresTarifi")) {
 		filter = append(filter, primitive.E{Key: "adresTarifi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adresTarifi"), Options: "i"}}}})
 	}
-	if ctx.Query("acilDurum") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("acilDurum")) {
 		filter = append(filter, primitive.E{Key: "acilDurum", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("acilDurum"), Options: "i"}}}})
 	}
-	if ctx.Query("yardimDurumu") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yardimDurumu")) {
 		filter = append(filter, primitive.E{Key: "yardimDurumu", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yardimDurumu"), Options: "i"}}}})
 	}
-	if ctx.Query("kisiSayisi") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("kisiSayisi")) {
 		filter = append(filter, primitive.E{Key: "kisiSayisi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("kisiSayisi"), Options: "i"}}}})
 	}
-	if ctx.Query("fizikiDurum") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("fizikiDurum")) {
 		filter = append(filter, primitive.E{Key: "fizikiDurum", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("fizikiDurum"), Options: "i"}}}})
 	}
-	if ctx.Query("googleMapLink") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("googleMapLink")) {
 		filter = append(filter, primitive.E{Key: "googleMapLink", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("googleMapLink"), Options: "i"}}}})
 	}
-	if ctx.Query("tweetLink") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("tweetLink")) {
 		filter = append(filter, primitive.E{Key: "tweetLink", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("tweetLink"), Options: "i"}}}})
 	}
-	if ctx.Query("ip") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("ip")) {
 		filter = append(filter, primitive.E{Key: "ip", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("ip"), Options: "i"}}}})
 	}
 	page, _ := strconv.ParseInt(ctx.Query("page"), 10, 64)

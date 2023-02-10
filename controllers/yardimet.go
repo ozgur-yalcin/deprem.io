@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -43,28 +44,28 @@ func YardimetEkle(ctx *gin.Context) {
 
 func YardimetAra(ctx *gin.Context) {
 	filter := primitive.D{}
-	if ctx.Query("yardimTipi") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yardimTipi")) {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yardimTipi"), Options: "i"}}}})
 	}
-	if ctx.Query("adSoyad") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adSoyad")) {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adSoyad"), Options: "i"}}}})
 	}
-	if ctx.Query("telefon") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
-	if ctx.Query("sehir") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("sehir")) {
 		filter = append(filter, primitive.E{Key: "sehir", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("sehir"), Options: "i"}}}})
 	}
-	if ctx.Query("hedefSehir") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("hedefSehir")) {
 		filter = append(filter, primitive.E{Key: "hedefSehir", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("hedefSehir"), Options: "i"}}}})
 	}
-	if ctx.Query("aciklama") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("aciklama")) {
 		filter = append(filter, primitive.E{Key: "aciklama", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("aciklama"), Options: "i"}}}})
 	}
-	if ctx.Query("yardimDurumu") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yardimDurumu")) {
 		filter = append(filter, primitive.E{Key: "yardimDurumu", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yardimDurumu"), Options: "i"}}}})
 	}
-	if ctx.Query("ip") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("ip")) {
 		filter = append(filter, primitive.E{Key: "ip", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("ip"), Options: "i"}}}})
 	}
 	page, _ := strconv.ParseInt(ctx.Query("page"), 10, 64)
@@ -98,28 +99,28 @@ func YardimetRapor(ctx *gin.Context) {
 		sheet.SetColWidth(i+1, i+1, 20.0)
 	}
 	filter := primitive.D{}
-	if ctx.Query("yardimTipi") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yardimTipi")) {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yardimTipi"), Options: "i"}}}})
 	}
-	if ctx.Query("adSoyad") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adSoyad")) {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adSoyad"), Options: "i"}}}})
 	}
-	if ctx.Query("telefon") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
-	if ctx.Query("sehir") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("sehir")) {
 		filter = append(filter, primitive.E{Key: "sehir", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("sehir"), Options: "i"}}}})
 	}
-	if ctx.Query("hedefSehir") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("hedefSehir")) {
 		filter = append(filter, primitive.E{Key: "hedefSehir", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("hedefSehir"), Options: "i"}}}})
 	}
-	if ctx.Query("aciklama") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("aciklama")) {
 		filter = append(filter, primitive.E{Key: "aciklama", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("aciklama"), Options: "i"}}}})
 	}
-	if ctx.Query("yardimDurumu") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("yardimDurumu")) {
 		filter = append(filter, primitive.E{Key: "yardimDurumu", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("yardimDurumu"), Options: "i"}}}})
 	}
-	if ctx.Query("ip") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("ip")) {
 		filter = append(filter, primitive.E{Key: "ip", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("ip"), Options: "i"}}}})
 	}
 	search := database.Search(ctx, models.YardimetCollection, filter, 0, 100000)

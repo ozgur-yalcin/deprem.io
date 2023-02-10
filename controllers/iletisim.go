@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -39,19 +40,19 @@ func IletisimEkle(ctx *gin.Context) {
 
 func IletisimAra(ctx *gin.Context) {
 	filter := primitive.D{}
-	if ctx.Query("adSoyad") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adSoyad")) {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adSoyad"), Options: "i"}}}})
 	}
-	if ctx.Query("email") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("email")) {
 		filter = append(filter, primitive.E{Key: "email", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("email"), Options: "i"}}}})
 	}
-	if ctx.Query("telefon") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
-	if ctx.Query("mesaj") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("mesaj")) {
 		filter = append(filter, primitive.E{Key: "mesaj", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("mesaj"), Options: "i"}}}})
 	}
-	if ctx.Query("ip") != "" {
+	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("ip")) {
 		filter = append(filter, primitive.E{Key: "ip", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("ip"), Options: "i"}}}})
 	}
 	page, _ := strconv.ParseInt(ctx.Query("page"), 10, 64)
