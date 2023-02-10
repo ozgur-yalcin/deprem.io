@@ -8,10 +8,10 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-var Redis *redis.Client
+var Client *redis.Client
 
 func Get(ctx context.Context, key string) []byte {
-	data, err := Redis.Get(ctx, key).Bytes()
+	data, err := Client.Get(ctx, key).Bytes()
 	if err != nil {
 		return nil
 	}
@@ -19,7 +19,7 @@ func Get(ctx context.Context, key string) []byte {
 }
 
 func Exists(ctx context.Context, key string) (exists bool) {
-	data, err := Redis.Exists(ctx, key).Result()
+	data, err := Client.Exists(ctx, key).Result()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,25 +32,25 @@ func Exists(ctx context.Context, key string) (exists bool) {
 }
 
 func Delete(ctx context.Context, key string) {
-	if err := Redis.Del(ctx, key).Err(); err != nil {
+	if err := Client.Del(ctx, key).Err(); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func Set(ctx context.Context, key string, val interface{}, exp int) {
-	if err := Redis.Set(ctx, key, val, time.Duration(exp)*time.Second).Err(); err != nil {
+	if err := Client.Set(ctx, key, val, time.Duration(exp)*time.Second).Err(); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func Expire(ctx context.Context, key string, exp int) {
-	if err := Redis.Expire(ctx, key, time.Duration(exp)*time.Second).Err(); err != nil {
+	if err := Client.Expire(ctx, key, time.Duration(exp)*time.Second).Err(); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func Flush(ctx context.Context) {
-	if err := Redis.FlushDB(ctx).Err(); err != nil {
+	if err := Client.FlushDB(ctx).Err(); err != nil {
 		log.Fatal(err)
 	}
 }

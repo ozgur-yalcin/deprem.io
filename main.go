@@ -46,7 +46,7 @@ func servehttps() error {
 }
 
 func connectredis() {
-	cache.Redis = redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost + ":" + environment.RedisPort, Password: environment.RedisPass, DB: 10})
+	cache.Client = redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost + ":" + environment.RedisPort, Password: environment.RedisPass, DB: 10})
 }
 
 func run() error {
