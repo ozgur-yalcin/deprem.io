@@ -20,6 +20,8 @@ func main() {
 	router.GET("/yardimet", controllers.YardimetAra)
 	router.POST("/yardimet", controllers.YardimetEkle)
 	router.GET("/yardimet/rapor", controllers.YardimetRapor)
+	router.GET("/yardimkaydi/:id", controllers.YardimKaydi)
+	router.POST("/yardimkaydi", controllers.YardimKaydiEkle)
 	router.GET("/cache/flushall", controllers.Flushall)
 	database.Connect()
 	cache.Connect()
