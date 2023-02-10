@@ -4,15 +4,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const IletisimCollection = "iletisim"
+const YardimKaydiCollection = "yardimkaydi"
 
-type Iletisim struct {
+type YardimKaydi struct {
 	Id        primitive.ObjectID `json:"postId,omitempty" bson:"postId,omitempty"`
 	AdSoyad   string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
-	Email     string             `json:"email,omitempty" bson:"email,omitempty"`
 	Telefon   string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
-	Mesaj     string             `json:"mesaj,omitempty" bson:"mesaj,omitempty"`
-	IPv4      string             `json:"ip,omitempty" bson:"ip,omitempty"`
+	Email     string             `json:"email,omitempty" bson:"email,omitempty"`
+	SonDurum  string             `json:"sonDurum,omitempty" bson:"sonDurum,omitempty"`
+	Aciklama  string             `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
 	CreatedAt primitive.DateTime `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 	UpdatedAt primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }

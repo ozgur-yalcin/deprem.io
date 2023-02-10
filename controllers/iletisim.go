@@ -12,7 +12,7 @@ import (
 )
 
 func Iletisim(ctx *gin.Context) {
-	search := database.Search(ctx, models.IletisimCollection, primitive.D{{Key: "_id", Value: ctx.Param("id")}}, 0, 1)
+	search := database.Search(ctx, models.IletisimCollection, primitive.D{{Key: "postId", Value: ctx.Param("id")}}, 0, 1)
 	if len(search) > 0 {
 		ctx.JSON(http.StatusOK, search[0])
 		return
