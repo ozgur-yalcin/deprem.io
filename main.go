@@ -61,8 +61,8 @@ func main() {
 	http.HandleFunc("/yardimet/ara", controllers.YardimetAra)
 	http.HandleFunc("/yardimet/ekle", controllers.YardimetEkle)
 	http.HandleFunc("/yardimet/rapor", controllers.YardimetRapor)
-	http.HandleFunc("/flushall", controllers.Flushall)
-	http.HandleFunc("/getstats", controllers.GetStats)
+	http.HandleFunc("/cache/flushall", controllers.Flushall)
+	http.HandleFunc("/cache/getstats", controllers.GetStats)
 	if e := run(); e != nil {
 		log.Fatalln(e)
 	}
