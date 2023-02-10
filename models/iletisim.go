@@ -6,11 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/ozgur-soft/deprem.io/cache"
 	"github.com/ozgur-soft/deprem.io/environment"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -18,14 +18,14 @@ import (
 const IletisimCollection = "iletisim"
 
 type Iletisim struct {
-	Id        any       `json:"_id,omitempty" bson:"_id,omitempty"`
-	AdSoyad   string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
-	Email     string    `json:"email,omitempty" bson:"email,omitempty"`
-	Telefon   string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
-	Mesaj     string    `json:"mesaj,omitempty" bson:"mesaj,omitempty"`
-	IPv4      string    `json:"ip,omitempty" bson:"ip,omitempty"`
-	CreatedAt time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
-	UpdatedAt time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
+	Id        any                `json:"_id,omitempty" bson:"_id,omitempty"`
+	AdSoyad   string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
+	Email     string             `json:"email,omitempty" bson:"email,omitempty"`
+	Telefon   string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
+	Mesaj     string             `json:"mesaj,omitempty" bson:"mesaj,omitempty"`
+	IPv4      string             `json:"ip,omitempty" bson:"ip,omitempty"`
+	CreatedAt primitive.DateTime `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+	UpdatedAt primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
 func (model *Iletisim) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Iletisim) {

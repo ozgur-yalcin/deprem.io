@@ -45,6 +45,7 @@ func YardimetEkle(w http.ResponseWriter, r *http.Request) {
 		w.Write(response.JSON())
 		return
 	}
+	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	id := yardimet.Ekle(r.Context(), data)
 	if id != "" {
 		response := models.Response{Message: "Yardım kaydı başarıyla alındı"}
@@ -106,7 +107,7 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 
 func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 	file := xlsx.NewFile()
-	rows := []string{"Yardım tipi", "Ad soyad", "Telefon", "Şehir", "Hedef şehir", "Yardım durumu", "Açıklama", "IP adresi", "Oluşturma zamanı", "Güncelleme zamanı"}
+	rows := []string{"Yardım tipi", "Ad soyad", "Telefon", "Şehir", "Hedef şehir", "Açıklama", "Yardım durumu", "IP adresi", "Oluşturma zamanı", "Güncelleme zamanı"}
 	sheet, err := file.AddSheet("Sheet1")
 	if err != nil {
 		log.Println(err.Error())
@@ -133,8 +134,8 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		xlsdata.AddCell().SetString(data.Aciklama)
 		xlsdata.AddCell().SetString(data.YardimDurumu)
 		xlsdata.AddCell().SetString(data.IPv4)
-		xlsdata.AddCell().SetString(data.CreatedAt.Format(time.RFC3339))
-		xlsdata.AddCell().SetString(data.UpdatedAt.Format(time.RFC3339))
+		xlsdata.AddCell().SetString(data.CreatedAt.Time().Format(time.RFC3339))
+		xlsdata.AddCell().SetString(data.UpdatedAt.Time().Format(time.RFC3339))
 	}
 	sheet.AutoFilter = &xlsx.AutoFilter{
 		TopLeftCell:     "B1",

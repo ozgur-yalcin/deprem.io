@@ -6,11 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/ozgur-soft/deprem.io/cache"
 	"github.com/ozgur-soft/deprem.io/environment"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -18,19 +18,19 @@ import (
 const YardimetCollection = "yardimet"
 
 type Yardimet struct {
-	Id           any       `json:"_id,omitempty" bson:"_id,omitempty"`
-	YardimTipi   string    `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"`
-	AdSoyad      string    `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
-	Telefon      string    `json:"telefon,omitempty" bson:"telefon,omitempty"`
-	Sehir        string    `json:"sehir,omitempty" bson:"sehir,omitempty"`
-	Ilce         string    `json:"ilce,omitempty" bson:"ilce,omitempty"` // TODO: ilçe geçici required false yapıldı
-	HedefSehir   string    `json:"hedefSehir,omitempty" bson:"hedefSehir,omitempty"`
-	Aciklama     string    `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
-	Fields       any       `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
-	YardimDurumu string    `json:"yardimDurumu,omitempty" bson:"yardimDurumu,omitempty"`
-	IPv4         string    `json:"ip,omitempty" bson:"ip,omitempty"`
-	CreatedAt    time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
-	UpdatedAt    time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
+	Id           any                `json:"_id,omitempty" bson:"_id,omitempty"`
+	YardimTipi   string             `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"`
+	AdSoyad      string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
+	Telefon      string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
+	Sehir        string             `json:"sehir,omitempty" bson:"sehir,omitempty"`
+	Ilce         string             `json:"ilce,omitempty" bson:"ilce,omitempty"` // TODO: ilçe geçici required false yapıldı
+	HedefSehir   string             `json:"hedefSehir,omitempty" bson:"hedefSehir,omitempty"`
+	Aciklama     string             `json:"aciklama,omitempty" bson:"aciklama,omitempty"`
+	Fields       any                `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
+	YardimDurumu string             `json:"yardimDurumu,omitempty" bson:"yardimDurumu,omitempty"`
+	IPv4         string             `json:"ip,omitempty" bson:"ip,omitempty"`
+	CreatedAt    primitive.DateTime `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+	UpdatedAt    primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
 func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardimet) {

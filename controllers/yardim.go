@@ -6,6 +6,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ozgur-soft/deprem.io/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -40,6 +41,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 		w.Write(response.JSON())
 		return
 	}
+	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	id := yardim.Ekle(r.Context(), data)
 	if id != "" {
 		response := models.Response{Message: "Yardım bildirimi başarıyla alındı"}
