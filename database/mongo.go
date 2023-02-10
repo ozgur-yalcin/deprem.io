@@ -26,6 +26,8 @@ func Connect() {
 }
 
 func Search(ctx context.Context, collection string, search bson.D, skip int64, limit int64) (list []any) {
+	client.Connect(ctx)
+	defer client.Disconnect(ctx)
 	if key, err := json.Marshal(search); err == nil {
 		cachekey := cache.Key(collection, fmt.Sprintf("%v_%v_%v", string(key), skip, limit))
 		if cache.Get(ctx, cachekey) != nil {
@@ -48,6 +50,8 @@ func Search(ctx context.Context, collection string, search bson.D, skip int64, l
 }
 
 func Add(ctx context.Context, collection string, data any) string {
+	client.Connect(ctx)
+	defer client.Disconnect(ctx)
 	add, err := client.Database(environment.MongoDb).Collection(collection).InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
