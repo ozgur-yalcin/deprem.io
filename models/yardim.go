@@ -22,7 +22,7 @@ type Yardim struct {
 	YardimTipi      string             `json:"yardimTipi,omitempty" bson:"yardimTipi,omitempty"` // Gıda, İlaç, Enkaz, Isınma, Kayıp
 	AdSoyad         string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Telefon         string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
-	YedekTelefonlar string             `json:"yedekTelefonlar,omitempty" bson:"yedekTelefonlar,omitempty"`
+	YedekTelefonlar []string           `json:"yedekTelefonlar,omitempty" bson:"yedekTelefonlar,omitempty"`
 	Email           string             `json:"email,omitempty" bson:"email,omitempty"`
 	Adres           string             `json:"adres,omitempty" bson:"adres,omitempty"`
 	AdresTarifi     string             `json:"adresTarifi,omitempty" bson:"adresTarifi,omitempty"`
