@@ -161,7 +161,7 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		xlsdata.AddCell().SetString(data.CreatedAt.Time().Format(time.RFC3339))
 		xlsdata.AddCell().SetString(data.UpdatedAt.Time().Format(time.RFC3339))
 	}
-	sheet.AutoFilter = &xlsx.AutoFilter{TopLeftCell: "B1", BottomRightCell: xlsx.GetCellIDStringFromCoords(len(rows)+1, len(list)+1)}
+	sheet.AutoFilter = &xlsx.AutoFilter{TopLeftCell: "B1", BottomRightCell: xlsx.GetCellIDStringFromCoords(len(rows)+1, len(search)+1)}
 	buffer := new(bytes.Buffer)
 	defer buffer.Reset()
 	file.Write(buffer)
