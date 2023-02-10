@@ -14,7 +14,7 @@ import (
 var client *redis.Client
 
 func Connect() {
-	client = redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost + ":" + environment.RedisPort, Password: environment.RedisPass, DB: 10})
+	client = redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost + ":" + environment.RedisPort, Password: environment.RedisPass})
 }
 
 func Key(prefix, key string) string {
