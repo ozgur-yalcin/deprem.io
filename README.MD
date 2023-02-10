@@ -1,0 +1,1 @@
+Golang port of deprem.io backend library, forked from [acikkaynak/deprem-io-backend](https://github.com/acikkaynak/deprem-io-backend).
