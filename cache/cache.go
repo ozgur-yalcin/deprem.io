@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"log"
 	"time"
 
@@ -9,6 +11,14 @@ import (
 )
 
 var Client *redis.Client
+
+func Key(prefix, key string) string {
+	hash := md5.New()
+	hash.Write([]byte(key))
+	sum := hash.Sum(nil)
+	cachekey := prefix + ":" + hex.EncodeToString(sum)
+	return cachekey
+}
 
 func Get(ctx context.Context, key string) []byte {
 	data, err := Client.Get(ctx, key).Bytes()

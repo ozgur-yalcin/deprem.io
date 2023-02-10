@@ -29,7 +29,11 @@ type Iletisim struct {
 }
 
 func (model *Iletisim) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Iletisim) {
-	cachekey := fmt.Sprintf("%v_%v_%v", IletisimCollection, skip, limit)
+	key, err := json.Marshal(search)
+	if err != nil {
+		log.Fatal(err)
+	}
+	cachekey := cache.Key(IletisimCollection, string(key)+fmt.Sprintf("%v", skip)+fmt.Sprintf("%v", limit))
 	if cache.Get(ctx, cachekey) != nil {
 		data := cache.Get(ctx, cachekey)
 		reader := bytes.NewReader(data)
