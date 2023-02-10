@@ -8,16 +8,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ozgur-soft/deprem.io/database"
 	"github.com/ozgur-soft/deprem.io/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Yardim(w http.ResponseWriter, r *http.Request) {
-	model := new(models.Yardim)
 	path := strings.TrimRight(r.URL.EscapedPath(), "/")
 	if len(strings.Split(path, "/")) == 3 {
 		id := regexp.MustCompile(`[^\/]+@`).FindString(path)
-		search := model.Search(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
+		search := database.Search(r.Context(), models.YardimCollection, primitive.D{{Key: "_id", Value: id}}, 0, 1)
 		if len(search) > 0 {
 			response, _ := json.MarshalIndent(search[0], " ", " ")
 			w.Header().Set("Content-Type", "application/json")
@@ -35,10 +35,9 @@ func Yardim(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimEkle(w http.ResponseWriter, r *http.Request) {
-	model := new(models.Yardim)
 	data := models.Yardim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := model.Search(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "adres", Value: data.Adres}}, 0, 1)
+	exists := database.Search(r.Context(), models.YardimCollection, primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "adres", Value: data.Adres}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
@@ -47,7 +46,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
-	id := model.Add(r.Context(), data)
+	id := database.Add(r.Context(), models.YardimCollection, data)
 	if id != "" {
 		response := models.Response{Message: "Yardım bildirimi başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")
@@ -62,7 +61,6 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimAra(w http.ResponseWriter, r *http.Request) {
-	model := new(models.Yardim)
 	filter := primitive.D{}
 	if r.Form.Get("yardimTipi") != "" {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("yardimTipi"), Options: "i"}}}})
@@ -117,7 +115,7 @@ func YardimAra(w http.ResponseWriter, r *http.Request) {
 	if limit > 100 {
 		limit = 100
 	}
-	search := model.Search(r.Context(), filter, (page-1)*limit, limit)
+	search := database.Search(r.Context(), models.YardimCollection, filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

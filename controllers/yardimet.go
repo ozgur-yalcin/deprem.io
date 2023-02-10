@@ -11,17 +11,17 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ozgur-soft/deprem.io/database"
 	"github.com/ozgur-soft/deprem.io/models"
 	"github.com/tealeg/xlsx"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Yardimet(w http.ResponseWriter, r *http.Request) {
-	model := new(models.Yardimet)
 	path := strings.TrimRight(r.URL.EscapedPath(), "/")
 	if len(strings.Split(path, "/")) == 3 {
 		id := regexp.MustCompile(`[^\/]+@`).FindString(path)
-		search := model.Search(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
+		search := database.Search(r.Context(), models.YardimetCollection, primitive.D{{Key: "_id", Value: id}}, 0, 1)
 		if len(search) > 0 {
 			response, _ := json.MarshalIndent(search[0], " ", " ")
 			w.Header().Set("Content-Type", "application/json")
@@ -39,10 +39,9 @@ func Yardimet(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimetEkle(w http.ResponseWriter, r *http.Request) {
-	model := new(models.Yardimet)
 	data := models.Yardimet{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := model.Search(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "sehir", Value: data.Sehir}}, 0, 1)
+	exists := database.Search(r.Context(), models.YardimetCollection, primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "sehir", Value: data.Sehir}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım kaydı daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
@@ -51,7 +50,7 @@ func YardimetEkle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
-	id := model.Add(r.Context(), data)
+	id := database.Add(r.Context(), models.YardimetCollection, data)
 	if id != "" {
 		response := models.Response{Message: "Yardım kaydı başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")
@@ -66,7 +65,6 @@ func YardimetEkle(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimetAra(w http.ResponseWriter, r *http.Request) {
-	model := new(models.Yardimet)
 	filter := primitive.D{}
 	if r.Form.Get("yardimTipi") != "" {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("yardimTipi"), Options: "i"}}}})
@@ -103,7 +101,7 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 	if limit > 100 {
 		limit = 100
 	}
-	search := model.Search(r.Context(), filter, (page-1)*limit, limit)
+	search := database.Search(r.Context(), models.YardimetCollection, filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -125,7 +123,6 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		head.Value = row
 		sheet.SetColWidth(i+1, i+1, 20.0)
 	}
-	model := new(models.Yardimet)
 	filter := primitive.D{}
 	if r.Form.Get("yardimTipi") != "" {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("yardimTipi"), Options: "i"}}}})
@@ -151,20 +148,24 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 	if r.Form.Get("ip") != "" {
 		filter = append(filter, primitive.E{Key: "ip", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("ip"), Options: "i"}}}})
 	}
-	search := model.Search(r.Context(), filter, 0, 100000)
+	search := database.Search(r.Context(), models.YardimetCollection, filter, 0, 100000)
 	for id, data := range search {
-		xlsdata := sheet.AddRow()
-		xlsdata.AddCell().SetInt(id + 1)
-		xlsdata.AddCell().SetString(data.YardimTipi)
-		xlsdata.AddCell().SetString(data.AdSoyad)
-		xlsdata.AddCell().SetString(data.Telefon)
-		xlsdata.AddCell().SetString(data.Sehir)
-		xlsdata.AddCell().SetString(data.HedefSehir)
-		xlsdata.AddCell().SetString(data.Aciklama)
-		xlsdata.AddCell().SetString(data.YardimDurumu)
-		xlsdata.AddCell().SetString(data.IPv4)
-		xlsdata.AddCell().SetString(data.CreatedAt.Time().Format(time.RFC3339))
-		xlsdata.AddCell().SetString(data.UpdatedAt.Time().Format(time.RFC3339))
+		if parse, err := json.Marshal(data); err == nil {
+			info := models.Yardimet{}
+			json.Unmarshal(parse, &info)
+			xlsdata := sheet.AddRow()
+			xlsdata.AddCell().SetInt(id + 1)
+			xlsdata.AddCell().SetString(info.YardimTipi)
+			xlsdata.AddCell().SetString(info.AdSoyad)
+			xlsdata.AddCell().SetString(info.Telefon)
+			xlsdata.AddCell().SetString(info.Sehir)
+			xlsdata.AddCell().SetString(info.HedefSehir)
+			xlsdata.AddCell().SetString(info.Aciklama)
+			xlsdata.AddCell().SetString(info.YardimDurumu)
+			xlsdata.AddCell().SetString(info.IPv4)
+			xlsdata.AddCell().SetString(info.CreatedAt.Time().Format(time.RFC3339))
+			xlsdata.AddCell().SetString(info.UpdatedAt.Time().Format(time.RFC3339))
+		}
 	}
 	sheet.AutoFilter = &xlsx.AutoFilter{TopLeftCell: "B1", BottomRightCell: xlsx.GetCellIDStringFromCoords(len(rows)+1, len(search)+1)}
 	buffer := new(bytes.Buffer)
