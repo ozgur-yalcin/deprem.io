@@ -9,14 +9,13 @@ import (
 	"time"
 
 	"github.com/ozgur-soft/deprem.io/models"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Iletisim(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := iletisim.Ara(r.Context(), bson.D{{Key: "_id", Value: id}}, 0, 1)
+	search := iletisim.Ara(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
 	if len(search) == 1 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
@@ -33,7 +32,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
 	data := models.Iletisim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := iletisim.Ara(r.Context(), bson.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "email", Value: data.Email}, {Key: "mesaj", Value: data.Mesaj}}, 0, 1)
+	exists := iletisim.Ara(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "email", Value: data.Email}, {Key: "mesaj", Value: data.Mesaj}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "İletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
@@ -58,21 +57,21 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 
 func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	iletisim := new(models.Iletisim)
-	filter := bson.D{}
+	filter := primitive.D{}
 	if r.Form.Get("adSoyad") != "" {
-		filter = append(filter, bson.E{Key: "adSoyad", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
+		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("adSoyad"), Options: "i"}}}})
 	}
 	if r.Form.Get("email") != "" {
-		filter = append(filter, bson.E{Key: "email", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("email"), "i"}}}})
+		filter = append(filter, primitive.E{Key: "email", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("email"), Options: "i"}}}})
 	}
 	if r.Form.Get("telefon") != "" {
-		filter = append(filter, bson.E{Key: "telefon", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("telefon"), "i"}}}})
+		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("telefon"), Options: "i"}}}})
 	}
 	if r.Form.Get("mesaj") != "" {
-		filter = append(filter, bson.E{Key: "mesaj", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("mesaj"), "i"}}}})
+		filter = append(filter, primitive.E{Key: "mesaj", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("mesaj"), Options: "i"}}}})
 	}
 	if r.Form.Get("ip") != "" {
-		filter = append(filter, bson.E{Key: "ip", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("ip"), "i"}}}})
+		filter = append(filter, primitive.E{Key: "ip", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("ip"), Options: "i"}}}})
 	}
 	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
 	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
