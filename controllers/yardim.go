@@ -41,7 +41,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
-	id := model.Insert(r.Context(), data)
+	id := model.Add(r.Context(), data)
 	if id != "" {
 		response := models.Response{Message: "Yardım bildirimi başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")

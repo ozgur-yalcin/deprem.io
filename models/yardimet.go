@@ -50,33 +50,33 @@ func (model *Yardimet) Search(ctx context.Context, search bson.D, skip int64, li
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	collection := cli.Database(environment.MongoDb).Collection(YardimetCollection)
-	cursor, err := collection.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
+	col := cli.Database(environment.MongoDb).Collection(YardimetCollection)
+	cur, err := col.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer cursor.Close(ctx)
-	if cursor.Err() == nil {
-		for cursor.Next(ctx) {
-			var data Yardimet
-			cursor.Decode(&data)
+	defer cur.Close(ctx)
+	if cur.Err() == nil {
+		for cur.Next(ctx) {
+			data := Yardimet{}
+			cur.Decode(&data)
 			list = append(list, data)
 		}
 	}
 	return list
 }
 
-func (model *Yardimet) Insert(ctx context.Context, data Yardimet) string {
+func (model *Yardimet) Add(ctx context.Context, data Yardimet) string {
 	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuthDb)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	collection := cli.Database(environment.MongoDb).Collection(YardimetCollection)
-	insert, err := collection.InsertOne(ctx, data)
+	col := cli.Database(environment.MongoDb).Collection(YardimetCollection)
+	add, err := col.InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return fmt.Sprintf("%v", insert.InsertedID)
+	return fmt.Sprintf("%v", add.InsertedID)
 }
