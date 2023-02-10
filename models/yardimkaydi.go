@@ -7,7 +7,8 @@ import (
 const YardimKaydiCollection = "yardimkaydi"
 
 type YardimKaydi struct {
-	Id        primitive.ObjectID `json:"postId,omitempty" bson:"postId,omitempty"`
+	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	PostId    primitive.ObjectID `json:"postId,omitempty" bson:"postId,omitempty"`
 	AdSoyad   string             `json:"adSoyad,omitempty" bson:"adSoyad,omitempty"`
 	Telefon   string             `json:"telefon,omitempty" bson:"telefon,omitempty"`
 	Email     string             `json:"email,omitempty" bson:"email,omitempty"`
