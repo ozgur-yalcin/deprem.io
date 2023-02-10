@@ -34,17 +34,15 @@ type Yardimet struct {
 }
 
 func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardimet) {
-	key, err := json.Marshal(search)
-	if err != nil {
-		log.Fatal(err)
-	}
-	cachekey := cache.Key(YardimetCollection, string(key)+fmt.Sprintf("%v", skip)+fmt.Sprintf("%v", limit))
-	if cache.Get(ctx, cachekey) != nil {
-		data := cache.Get(ctx, cachekey)
-		reader := bytes.NewReader(data)
-		decoder := json.NewDecoder(reader)
-		decoder.Decode(&list)
-		return list
+	if key, err := json.Marshal(search); err == nil {
+		cachekey := cache.Key(YardimetCollection, fmt.Sprintf("%v_%v_%v", string(key), skip, limit))
+		if cache.Get(ctx, cachekey) != nil {
+			data := cache.Get(ctx, cachekey)
+			reader := bytes.NewReader(data)
+			decoder := json.NewDecoder(reader)
+			decoder.Decode(&list)
+			return list
+		}
 	}
 	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuth)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
