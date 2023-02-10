@@ -45,8 +45,7 @@ func (model *Iletisim) Search(ctx context.Context, search bson.D, skip int64, li
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	col := cli.Database(environment.MongoDb).Collection(IletisimCollection)
-	cur, err := col.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
+	cur, err := cli.Database(environment.MongoDb).Collection(IletisimCollection).Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,8 +63,7 @@ func (model *Iletisim) Add(ctx context.Context, data Iletisim) string {
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	col := cli.Database(environment.MongoDb).Collection(IletisimCollection)
-	add, err := col.InsertOne(ctx, data)
+	add, err := cli.Database(environment.MongoDb).Collection(IletisimCollection).InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
 	}

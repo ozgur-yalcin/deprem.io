@@ -50,8 +50,7 @@ func (model *Yardimet) Search(ctx context.Context, search bson.D, skip int64, li
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	col := cli.Database(environment.MongoDb).Collection(YardimetCollection)
-	cur, err := col.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
+	cur, err := cli.Database(environment.MongoDb).Collection(YardimetCollection).Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,8 +68,7 @@ func (model *Yardimet) Add(ctx context.Context, data Yardimet) string {
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	col := cli.Database(environment.MongoDb).Collection(YardimetCollection)
-	add, err := col.InsertOne(ctx, data)
+	add, err := cli.Database(environment.MongoDb).Collection(YardimetCollection).InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
 	}

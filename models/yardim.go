@@ -55,8 +55,7 @@ func (model *Yardim) Search(ctx context.Context, search bson.D, skip int64, limi
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	col := cli.Database(environment.MongoDb).Collection(YardimCollection)
-	cur, err := col.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
+	cur, err := cli.Database(environment.MongoDb).Collection(YardimCollection).Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,8 +73,7 @@ func (model *Yardim) Add(ctx context.Context, data Yardim) string {
 		log.Fatal(err)
 	}
 	defer cli.Disconnect(ctx)
-	col := cli.Database(environment.MongoDb).Collection(YardimCollection)
-	add, err := col.InsertOne(ctx, data)
+	add, err := cli.Database(environment.MongoDb).Collection(YardimCollection).InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)
 	}
