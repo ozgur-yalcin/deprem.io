@@ -10,6 +10,7 @@ import (
 
 	"github.com/ozgur-soft/deprem.io/cache"
 	"github.com/ozgur-soft/deprem.io/controllers"
+	"github.com/ozgur-soft/deprem.io/database"
 )
 
 func certificate(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -63,6 +64,7 @@ func main() {
 	http.HandleFunc("/yardimet/ekle", controllers.YardimetEkle)
 	http.HandleFunc("/yardimet/rapor", controllers.YardimetRapor)
 	http.HandleFunc("/cache/flushall", controllers.Flushall)
+	database.Connect()
 	cache.Connect()
 	if e := run(); e != nil {
 		log.Fatalln(e)
