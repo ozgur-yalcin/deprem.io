@@ -50,7 +50,7 @@ func YardimetAra(ctx *gin.Context) {
 	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adSoyad")) {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adSoyad"), Options: "i"}}}})
 	}
-	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
+	if regexp.MustCompile(`^\d{10}$`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
 	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("sehir")) {
@@ -105,7 +105,7 @@ func YardimetRapor(ctx *gin.Context) {
 	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("adSoyad")) {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("adSoyad"), Options: "i"}}}})
 	}
-	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
+	if regexp.MustCompile(`^\d{10}$`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
 	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("sehir")) {

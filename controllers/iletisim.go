@@ -46,7 +46,7 @@ func IletisimAra(ctx *gin.Context) {
 	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("email")) {
 		filter = append(filter, primitive.E{Key: "email", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("email"), Options: "i"}}}})
 	}
-	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("telefon")) {
+	if regexp.MustCompile(`^\d{10}$`).MatchString(ctx.Query("telefon")) {
 		filter = append(filter, primitive.E{Key: "telefon", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: ctx.Query("telefon"), Options: "i"}}}})
 	}
 	if regexp.MustCompile(`.{1,}`).MatchString(ctx.Query("mesaj")) {
