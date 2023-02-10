@@ -21,7 +21,7 @@ type Yardim struct {
 	FizikiDurum     string             `json:"fizikiDurum,omitempty" bson:"fizikiDurum,omitempty"`
 	GoogleMapLink   string             `json:"googleMapLink,omitempty" bson:"googleMapLink,omitempty"`
 	TweetLink       string             `json:"tweetLink,omitempty" bson:"tweetLink,omitempty"`
-	Fields          any                `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
+	Fields          primitive.M        `json:"fields,omitempty" bson:"fields,omitempty"` // Tüm alternatif kullanımlar için buraya json yollayın
 	IPv4            string             `json:"ip,omitempty" bson:"ip,omitempty"`
 	CreatedAt       primitive.DateTime `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 	UpdatedAt       primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
