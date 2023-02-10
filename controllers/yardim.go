@@ -13,10 +13,10 @@ import (
 )
 
 func Yardim(w http.ResponseWriter, r *http.Request) {
-	yardim := new(models.Yardim)
+	model := new(models.Yardim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := yardim.Ara(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
-	if len(search) == 1 {
+	search := model.Search(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
+	if len(search) > 0 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -29,10 +29,10 @@ func Yardim(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimEkle(w http.ResponseWriter, r *http.Request) {
-	yardim := new(models.Yardim)
+	model := new(models.Yardim)
 	data := models.Yardim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := yardim.Ara(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "adres", Value: data.Adres}}, 0, 1)
+	exists := model.Search(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "adres", Value: data.Adres}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
@@ -41,7 +41,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
-	id := yardim.Ekle(r.Context(), data)
+	id := model.Insert(r.Context(), data)
 	if id != "" {
 		response := models.Response{Message: "Yardım bildirimi başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")
@@ -56,7 +56,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimAra(w http.ResponseWriter, r *http.Request) {
-	yardim := new(models.Yardim)
+	model := new(models.Yardim)
 	filter := primitive.D{}
 	if r.Form.Get("yardimTipi") != "" {
 		filter = append(filter, primitive.E{Key: "yardimTipi", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("yardimTipi"), Options: "i"}}}})
@@ -111,7 +111,7 @@ func YardimAra(w http.ResponseWriter, r *http.Request) {
 	if limit > 100 {
 		limit = 100
 	}
-	search := yardim.Ara(r.Context(), filter, (page-1)*limit, limit)
+	search := model.Search(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

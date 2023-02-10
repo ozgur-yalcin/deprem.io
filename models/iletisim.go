@@ -28,7 +28,7 @@ type Iletisim struct {
 	UpdatedAt primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Iletisim) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Iletisim) {
+func (model *Iletisim) Search(ctx context.Context, search bson.D, skip int64, limit int64) (list []Iletisim) {
 	if key, err := json.Marshal(search); err == nil {
 		cachekey := cache.Key(IletisimCollection, fmt.Sprintf("%v_%v_%v", string(key), skip, limit))
 		if cache.Get(ctx, cachekey) != nil {
@@ -61,7 +61,7 @@ func (model *Iletisim) Ara(ctx context.Context, search bson.D, skip int64, limit
 	return list
 }
 
-func (model *Iletisim) Ekle(ctx context.Context, data Iletisim) string {
+func (model *Iletisim) Insert(ctx context.Context, data Iletisim) string {
 	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuthDb)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {

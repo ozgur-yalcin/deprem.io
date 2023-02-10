@@ -38,7 +38,7 @@ type Yardim struct {
 	UpdatedAt       primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Yardim) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardim) {
+func (model *Yardim) Search(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardim) {
 	if key, err := json.Marshal(search); err == nil {
 		cachekey := cache.Key(YardimCollection, fmt.Sprintf("%v_%v_%v", string(key), skip, limit))
 		if cache.Get(ctx, cachekey) != nil {
@@ -71,7 +71,7 @@ func (model *Yardim) Ara(ctx context.Context, search bson.D, skip int64, limit i
 	return list
 }
 
-func (model *Yardim) Ekle(ctx context.Context, data Yardim) string {
+func (model *Yardim) Insert(ctx context.Context, data Yardim) string {
 	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuthDb)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {

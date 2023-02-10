@@ -33,7 +33,7 @@ type Yardimet struct {
 	UpdatedAt    primitive.DateTime `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }
 
-func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardimet) {
+func (model *Yardimet) Search(ctx context.Context, search bson.D, skip int64, limit int64) (list []Yardimet) {
 	if key, err := json.Marshal(search); err == nil {
 		cachekey := cache.Key(YardimetCollection, fmt.Sprintf("%v_%v_%v", string(key), skip, limit))
 		if cache.Get(ctx, cachekey) != nil {
@@ -66,7 +66,7 @@ func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit
 	return list
 }
 
-func (model *Yardimet) Ekle(ctx context.Context, data Yardimet) string {
+func (model *Yardimet) Insert(ctx context.Context, data Yardimet) string {
 	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoAuthDb)
 	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {

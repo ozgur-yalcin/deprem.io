@@ -13,10 +13,10 @@ import (
 )
 
 func Iletisim(w http.ResponseWriter, r *http.Request) {
-	iletisim := new(models.Iletisim)
+	model := new(models.Iletisim)
 	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := iletisim.Ara(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
-	if len(search) == 1 {
+	search := model.Search(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
+	if len(search) > 0 {
 		response, _ := json.MarshalIndent(search[0], " ", " ")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -29,10 +29,10 @@ func Iletisim(w http.ResponseWriter, r *http.Request) {
 }
 
 func IletisimEkle(w http.ResponseWriter, r *http.Request) {
-	iletisim := new(models.Iletisim)
+	model := new(models.Iletisim)
 	data := models.Iletisim{}
 	json.NewDecoder(r.Body).Decode(&data)
-	exists := iletisim.Ara(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "email", Value: data.Email}, {Key: "mesaj", Value: data.Mesaj}}, 0, 1)
+	exists := model.Search(r.Context(), primitive.D{{Key: "adSoyad", Value: data.AdSoyad}, {Key: "email", Value: data.Email}, {Key: "mesaj", Value: data.Mesaj}}, 0, 1)
 	if len(exists) > 0 {
 		response := models.Response{Error: "İletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
@@ -41,7 +41,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
-	id := iletisim.Ekle(r.Context(), data)
+	id := model.Insert(r.Context(), data)
 	if id != "" {
 		response := models.Response{Message: "İletişim talebi başarıyla alındı"}
 		w.Header().Set("Content-Type", "application/json")
@@ -56,7 +56,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 }
 
 func IletisimAra(w http.ResponseWriter, r *http.Request) {
-	iletisim := new(models.Iletisim)
+	model := new(models.Iletisim)
 	filter := primitive.D{}
 	if r.Form.Get("adSoyad") != "" {
 		filter = append(filter, primitive.E{Key: "adSoyad", Value: primitive.D{{Key: "$regex", Value: primitive.Regex{Pattern: r.Form.Get("adSoyad"), Options: "i"}}}})
@@ -84,7 +84,7 @@ func IletisimAra(w http.ResponseWriter, r *http.Request) {
 	if limit > 100 {
 		limit = 100
 	}
-	search := iletisim.Ara(r.Context(), filter, (page-1)*limit, limit)
+	search := model.Search(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
