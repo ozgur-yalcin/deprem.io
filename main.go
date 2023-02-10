@@ -16,7 +16,7 @@ func certificate(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 	server := strings.ReplaceAll(hello.ServerName, "www.", "")
 	cert, err := tls.LoadX509KeyPair("/etc/letsencrypt/live/"+server+"/fullchain.pem", "/etc/letsencrypt/live/"+server+"/privkey.pem")
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 		return nil, nil
 	}
 	return &cert, nil

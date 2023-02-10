@@ -40,7 +40,7 @@ func YardimetEkle(w http.ResponseWriter, r *http.Request) {
 	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım kaydı daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusConflict)
 		w.Write(response.JSON())
 		return
 	}
@@ -109,7 +109,7 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 	rows := []string{"Yardım tipi", "Ad soyad", "Telefon", "Şehir", "Hedef şehir", "Açıklama", "Yardım durumu", "IP adresi", "Oluşturma zamanı", "Güncelleme zamanı"}
 	sheet, err := file.AddSheet("Sheet1")
 	if err != nil {
-		log.Println(err.Error())
+		log.Fatal(err.Error())
 	}
 	xlshead := sheet.AddRow()
 	head := xlshead.AddCell()

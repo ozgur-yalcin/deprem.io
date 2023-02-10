@@ -36,7 +36,7 @@ func IletisimEkle(w http.ResponseWriter, r *http.Request) {
 	if len(exists) > 0 {
 		response := models.Response{Error: "İletişim talebi zaten var, lütfen farklı bir talepte bulunun."}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusConflict)
 		w.Write(response.JSON())
 		return
 	}

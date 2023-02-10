@@ -36,7 +36,7 @@ func YardimEkle(w http.ResponseWriter, r *http.Request) {
 	if len(exists) > 0 {
 		response := models.Response{Error: "Yardım bildirimi daha önce veritabanımıza eklendi."}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusConflict)
 		w.Write(response.JSON())
 		return
 	}
