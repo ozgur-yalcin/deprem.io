@@ -124,8 +124,7 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 	list := yardimet.Ara(r.Context(), bson.D{}, 0, 100000)
 	for id, data := range list {
 		xlsdata := sheet.AddRow()
-		cell := xlsdata.AddCell()
-		cell.SetInt(id + 1)
+		xlsdata.AddCell().SetInt(id + 1)
 		xlsdata.AddCell().SetString(data.YardimTipi)
 		xlsdata.AddCell().SetString(data.AdSoyad)
 		xlsdata.AddCell().SetString(data.Telefon)
@@ -137,10 +136,7 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		xlsdata.AddCell().SetString(data.CreatedAt.Time().Format(time.RFC3339))
 		xlsdata.AddCell().SetString(data.UpdatedAt.Time().Format(time.RFC3339))
 	}
-	sheet.AutoFilter = &xlsx.AutoFilter{
-		TopLeftCell:     "B1",
-		BottomRightCell: xlsx.GetCellIDStringFromCoords(len(rows)+1, len(list)+1),
-	}
+	sheet.AutoFilter = &xlsx.AutoFilter{TopLeftCell: "B1", BottomRightCell: xlsx.GetCellIDStringFromCoords(len(rows)+1, len(list)+1)}
 	buffer := new(bytes.Buffer)
 	defer buffer.Reset()
 	file.Write(buffer)
