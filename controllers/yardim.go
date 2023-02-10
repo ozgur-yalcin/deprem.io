@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -14,18 +14,24 @@ import (
 
 func Yardim(w http.ResponseWriter, r *http.Request) {
 	model := new(models.Yardim)
-	id := path.Base(strings.TrimRight(r.URL.EscapedPath(), "/"))
-	search := model.Search(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
-	if len(search) > 0 {
-		response, _ := json.MarshalIndent(search[0], " ", " ")
+	path := strings.TrimRight(r.URL.EscapedPath(), "/")
+	if len(strings.Split(path, "/")) == 3 {
+		id := regexp.MustCompile(`[^\/]+@`).FindString(path)
+		search := model.Search(r.Context(), primitive.D{{Key: "_id", Value: id}}, 0, 1)
+		if len(search) > 0 {
+			response, _ := json.MarshalIndent(search[0], " ", " ")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			w.Write(response)
+			return
+		}
+		response := models.Response{Error: "Yardım bildirimi bulunamadı!"}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(response)
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(response.JSON())
+		return
 	}
-	response := models.Response{Error: "Yardım bildirimi bulunamadı!"}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write(response.JSON())
+	http.NotFound(w, r)
 }
 
 func YardimEkle(w http.ResponseWriter, r *http.Request) {
