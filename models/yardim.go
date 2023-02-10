@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
-	cache "github.com/ozgur-soft/deprem.io/cache"
-	bson "go.mongodb.org/mongo-driver/bson"
-	mongodb "go.mongodb.org/mongo-driver/mongo"
-	mongooptions "go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/ozgur-soft/deprem.io/cache"
+	"github.com/ozgur-soft/deprem.io/environment"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const YardimCollection = "yardim"
@@ -47,13 +47,14 @@ func (model *Yardim) Ara(ctx context.Context, search bson.D, skip int64, limit i
 		decoder.Decode(&list)
 		return list
 	}
-	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
+	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoDb)
+	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(ctx)
-	collection := client.Database(os.Getenv("MONGODB")).Collection(YardimCollection)
-	cursor, err := collection.Find(ctx, search, mongooptions.Find().SetSkip(skip).SetLimit(limit))
+	defer cli.Disconnect(ctx)
+	collection := cli.Database(environment.MongoDb).Collection(YardimCollection)
+	cursor, err := collection.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,12 +70,13 @@ func (model *Yardim) Ara(ctx context.Context, search bson.D, skip int64, limit i
 }
 
 func (model *Yardim) Ekle(ctx context.Context, data Yardim) string {
-	client, err := mongodb.Connect(ctx, mongooptions.Client().ApplyURI(os.Getenv("MONGOURL")))
+	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", environment.MongoUser, environment.MongoPass, environment.MongoHost, environment.MongoPort, environment.MongoDb)
+	cli, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(ctx)
-	collection := client.Database(os.Getenv("MONGODB")).Collection(YardimCollection)
+	defer cli.Disconnect(ctx)
+	collection := cli.Database(environment.MongoDb).Collection(YardimCollection)
 	insert, err := collection.InsertOne(ctx, data)
 	if err != nil {
 		log.Fatal(err)

@@ -10,8 +10,8 @@ import (
 
 // Sunucu bilgileri
 const (
-	httpHost = "0.0.0.0"
-	httpPort = ":http" // ssl için ":https" kullanılmalıdır
+	httpHost = "localhost"
+	httpPort = ":9999" // ssl için ":https" kullanılmalıdır
 )
 
 func main() {

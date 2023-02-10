@@ -3,19 +3,14 @@ package cache
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
-	redis "github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v8"
+	"github.com/ozgur-soft/deprem.io/environment"
 )
 
 func Get(ctx context.Context, key string) []byte {
-	uri, err := redis.ParseURL(os.Getenv("REDISURL"))
-	if err != nil {
-		log.Fatal(err)
-		return nil
-	}
-	conn := redis.NewClient(uri)
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost, Password: environment.RedisPass, DB: 0})
 	defer conn.Close()
 	data, err := conn.Get(ctx, key).Bytes()
 	if err != nil {
@@ -26,11 +21,7 @@ func Get(ctx context.Context, key string) []byte {
 }
 
 func Exists(ctx context.Context, key string) (exists bool) {
-	uri, err := redis.ParseURL(os.Getenv("REDISURL"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	conn := redis.NewClient(uri)
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost, Password: environment.RedisPass, DB: 0})
 	defer conn.Close()
 	data, err := conn.Exists(ctx, key).Result()
 	if err != nil {
@@ -45,11 +36,7 @@ func Exists(ctx context.Context, key string) (exists bool) {
 }
 
 func Delete(ctx context.Context, key string) {
-	uri, err := redis.ParseURL(os.Getenv("REDISURL"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	conn := redis.NewClient(uri)
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost, Password: environment.RedisPass, DB: 0})
 	defer conn.Close()
 	if err := conn.Del(ctx, key).Err(); err != nil {
 		log.Fatal(err)
@@ -57,11 +44,7 @@ func Delete(ctx context.Context, key string) {
 }
 
 func Set(ctx context.Context, key string, val interface{}, exp int) {
-	uri, err := redis.ParseURL(os.Getenv("REDISURL"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	conn := redis.NewClient(uri)
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost, Password: environment.RedisPass, DB: 0})
 	defer conn.Close()
 	if err := conn.Set(ctx, key, val, time.Duration(exp)*time.Second).Err(); err != nil {
 		log.Fatal(err)
@@ -69,11 +52,7 @@ func Set(ctx context.Context, key string, val interface{}, exp int) {
 }
 
 func Expire(ctx context.Context, key string, exp int) {
-	uri, err := redis.ParseURL(os.Getenv("REDISURL"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	conn := redis.NewClient(uri)
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost, Password: environment.RedisPass, DB: 0})
 	defer conn.Close()
 
 	if err := conn.Expire(ctx, key, time.Duration(exp)*time.Second).Err(); err != nil {
@@ -82,11 +61,7 @@ func Expire(ctx context.Context, key string, exp int) {
 }
 
 func Flush(ctx context.Context) {
-	uri, err := redis.ParseURL(os.Getenv("REDISURL"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	conn := redis.NewClient(uri)
+	conn := redis.NewClient(&redis.Options{Network: "tcp", Addr: environment.RedisHost, Password: environment.RedisPass, DB: 0})
 	defer conn.Close()
 	if err := conn.FlushDB(ctx).Err(); err != nil {
 		log.Fatal(err)
