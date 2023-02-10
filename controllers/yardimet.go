@@ -121,8 +121,33 @@ func YardimetRapor(w http.ResponseWriter, r *http.Request) {
 		sheet.SetColWidth(i+1, i+1, 20.0)
 	}
 	yardimet := new(models.Yardimet)
-	list := yardimet.Ara(r.Context(), bson.D{}, 0, 100000)
-	for id, data := range list {
+	filter := bson.D{}
+	if r.Form.Get("yardimTipi") != "" {
+		filter = append(filter, bson.E{Key: "yardimTipi", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("yardimTipi"), "i"}}}})
+	}
+	if r.Form.Get("adSoyad") != "" {
+		filter = append(filter, bson.E{Key: "adSoyad", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("adSoyad"), "i"}}}})
+	}
+	if r.Form.Get("telefon") != "" {
+		filter = append(filter, bson.E{Key: "telefon", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("telefon"), "i"}}}})
+	}
+	if r.Form.Get("sehir") != "" {
+		filter = append(filter, bson.E{Key: "sehir", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("sehir"), "i"}}}})
+	}
+	if r.Form.Get("hedefSehir") != "" {
+		filter = append(filter, bson.E{Key: "hedefSehir", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("hedefSehir"), "i"}}}})
+	}
+	if r.Form.Get("aciklama") != "" {
+		filter = append(filter, bson.E{Key: "aciklama", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("aciklama"), "i"}}}})
+	}
+	if r.Form.Get("yardimDurumu") != "" {
+		filter = append(filter, bson.E{Key: "yardimDurumu", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("yardimDurumu"), "i"}}}})
+	}
+	if r.Form.Get("ip") != "" {
+		filter = append(filter, bson.E{Key: "ip", Value: bson.D{{Key: "$regex", Value: primitive.Regex{r.Form.Get("ip"), "i"}}}})
+	}
+	search := yardimet.Ara(r.Context(), filter, 0, 100000)
+	for id, data := range search {
 		xlsdata := sheet.AddRow()
 		xlsdata.AddCell().SetInt(id + 1)
 		xlsdata.AddCell().SetString(data.YardimTipi)

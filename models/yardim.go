@@ -56,7 +56,7 @@ func (model *Yardim) Ara(ctx context.Context, search bson.D, skip int64, limit i
 	}
 	defer cli.Disconnect(ctx)
 	collection := cli.Database(environment.MongoDb).Collection(YardimCollection)
-	cursor, err := collection.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit))
+	cursor, err := collection.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
 	if err != nil {
 		log.Fatal(err)
 	}

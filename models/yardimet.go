@@ -51,7 +51,7 @@ func (model *Yardimet) Ara(ctx context.Context, search bson.D, skip int64, limit
 	}
 	defer cli.Disconnect(ctx)
 	collection := cli.Database(environment.MongoDb).Collection(YardimetCollection)
-	cursor, err := collection.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit))
+	cursor, err := collection.Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
 	if err != nil {
 		log.Fatal(err)
 	}
