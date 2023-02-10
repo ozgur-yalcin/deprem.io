@@ -62,11 +62,7 @@ func (model *Yardim) Search(ctx context.Context, search bson.D, skip int64, limi
 	}
 	defer cur.Close(ctx)
 	if cur.Err() == nil {
-		for cur.Next(ctx) {
-			data := Yardim{}
-			cur.Decode(&data)
-			list = append(list, data)
-		}
+		cur.All(ctx, &list)
 	}
 	return list
 }

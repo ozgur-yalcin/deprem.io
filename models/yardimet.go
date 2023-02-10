@@ -57,11 +57,7 @@ func (model *Yardimet) Search(ctx context.Context, search bson.D, skip int64, li
 	}
 	defer cur.Close(ctx)
 	if cur.Err() == nil {
-		for cur.Next(ctx) {
-			data := Yardimet{}
-			cur.Decode(&data)
-			list = append(list, data)
-		}
+		cur.All(ctx, &list)
 	}
 	return list
 }
