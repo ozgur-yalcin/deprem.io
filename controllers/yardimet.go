@@ -59,17 +59,6 @@ func YardimetEkle(w http.ResponseWriter, r *http.Request) {
 }
 
 func YardimetAra(w http.ResponseWriter, r *http.Request) {
-	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
-	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
-	if page < 0 {
-		page = 0
-	}
-	if limit <= 10 {
-		limit = 10
-	}
-	if limit > 100 {
-		limit = 100
-	}
 	yardimet := new(models.Yardimet)
 	filter := bson.D{}
 	if r.Form.Get("yardimTipi") != "" {
@@ -95,6 +84,17 @@ func YardimetAra(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Form.Get("ip") != "" {
 		filter = append(filter, bson.E{"ip", r.Form.Get("ip")})
+	}
+	page, _ := strconv.ParseInt(r.Form.Get("page"), 10, 64)
+	limit, _ := strconv.ParseInt(r.Form.Get("limit"), 10, 64)
+	if page < 0 {
+		page = 0
+	}
+	if limit <= 10 {
+		limit = 10
+	}
+	if limit > 100 {
+		limit = 100
 	}
 	search := yardimet.Ara(r.Context(), filter, (page-1)*limit, limit)
 	response, _ := json.MarshalIndent(search, " ", " ")
