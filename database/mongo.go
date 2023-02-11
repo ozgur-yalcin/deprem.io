@@ -37,14 +37,18 @@ func Search(ctx context.Context, collection string, search bson.D, skip int64, l
 			decoder.Decode(&list)
 			return list
 		}
-	}
-	cur, err := client.Database(environment.MongoDb).Collection(collection).Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer cur.Close(ctx)
-	if cur.Err() == nil {
-		cur.All(ctx, &list)
+		cur, err := client.Database(environment.MongoDb).Collection(collection).Find(ctx, search, options.Find().SetSkip(skip).SetLimit(limit).SetAllowDiskUse(true))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer cur.Close(ctx)
+		if cur.Err() == nil {
+			cur.All(ctx, &list)
+		}
+		cachedata := new(bytes.Buffer)
+		encoder := json.NewEncoder(cachedata)
+		encoder.Encode(list)
+		cache.Set(ctx, cachekey, cachedata.Bytes(), 300)
 	}
 	return list
 }
